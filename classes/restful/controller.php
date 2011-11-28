@@ -99,23 +99,23 @@ abstract class RESTful_Controller extends Controller
 	public function before()
 	{
 		// Defaulting output content type to text/plain - will hopefully be overriden later
-		$this->request->headers['Content-Type'] = 'text/plain';
+		$this->response->headers('Content-Type', 'text/plain');
 		
 		// Checking requested method
-		if ( ! isset($this->_action_map[Request::$method]))
+		if ( ! isset($this->_action_map[$this->request->method()]))
 		{
-			$this->request->headers['Allow'] = implode(', ', array_keys($this->_action_map));
+			$this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
 			$this->_error(405);
 			return FALSE;
 		}
 		else
 		{
-			$this->request->action = $this->_action_map[Request::$method];
+			$this->request->action() = $this->_action_map[$this->request->method()];
 		}
 
 		// Checking Content-Type. Considering only POST and PUT methods as other
 		// shouldn't have any content.
-		if (in_array(Request::$method, array('POST', 'PUT')))
+		if (in_array($this->request->method(), array('POST', 'PUT')))
 		{
 			$request_content_type = (array_key_exists('CONTENT_TYPE', $_SERVER)) ? $_SERVER['CONTENT_TYPE'] : FALSE;
 			$parser_prefix = 'RESTful_RequestParser_';
@@ -163,8 +163,8 @@ abstract class RESTful_Controller extends Controller
 
 		if (count($requested_mime_types) == 0 OR (count($requested_mime_types) == 1 AND isset($requested_mime_types['*/*'])))
 		{
+			$this->response->headers('Content-Type', $config_defaults->get('content-type'));
 			$this->_renderer = $renderer_prefix . $this->_response_types[$config_defaults->get('content-type')];
-			$this->request->headers['Content-Type'] = $config_defaults->get('content-type');
 		}
 		else
 		{
@@ -172,7 +172,7 @@ abstract class RESTful_Controller extends Controller
 			{
 				if (array_key_exists($type, $this->_response_types))
 				{
-					$this->request->headers['Content-Type'] = $type;
+					$this->response->headers('Content-Type', $type);
 					$this->_renderer = $renderer_prefix . $this->_response_types[$type];
 					break;
 				}
@@ -181,7 +181,7 @@ abstract class RESTful_Controller extends Controller
 
 		// Script should fail only if requester expects any content returned,
 		// that is when it uses GET method.
-		if (Request::$method == 'GET' AND ! $this->_renderer)
+		if ($this->request->method() == 'GET' AND ! $this->_renderer)
 		{
 			$this->_error(406, 'This service delivers following types: ' . implode(', ', array_keys($this->_response_types)) . '.');
 			return FALSE;
@@ -196,13 +196,13 @@ abstract class RESTful_Controller extends Controller
 	 */
 	protected function _error($status = 500, $msg = '')
 	{
-		$this->request->action = 'error';
-		$this->request->status = $status;
+		$this->request->action('error');
+		$this->response->status($status);
 
 		if (strlen($msg))
 		{
-			$this->request->headers['Content-Type'] = 'text/plain';
-			$this->request->response = $msg;
+			$this->response->headers('Content-Type', 'text/plain');
+			$this->response->body($msg);
 		}
 	}
 
@@ -215,7 +215,7 @@ abstract class RESTful_Controller extends Controller
 
 		if ($response !== FALSE)
 		{
-			$this->request->response = $response;
+			$this->response->body($response);
 		}
 		else
 		{

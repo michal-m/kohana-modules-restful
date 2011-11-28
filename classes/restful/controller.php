@@ -30,12 +30,6 @@
 abstract class RESTful_Controller extends Controller
 {
 	/**
-	 * @var  Kohana_Request  Request that created the controller.
-	 *						 (redeclared for type hinting)
-	 */
-	public $request;
-
-	/**
 	 * @var array Array of possible actions.
 	 */
 	protected $_action_map = array(
@@ -89,14 +83,14 @@ abstract class RESTful_Controller extends Controller
 	/**
 	 * @param Kohana_Request $request
 	 */
-	public function __construct(Kohana_Request $request)
+	public function __construct(Request $request, Response $response)
 	{
 		// Enable RESTful internal error handling
 		set_exception_handler(array('RESTful', 'exception_handler'));
 		// Doesn't do anything as Koahana::shutdown_handler() takes precedence.
 		register_shutdown_function(array('RESTful', 'shutdown_handler'));
 
-		parent::__construct($request);
+		parent::__construct($request, $response);
 	}
 
 	/**

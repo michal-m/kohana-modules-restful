@@ -159,11 +159,12 @@ abstract class RESTful_Controller extends Controller
 		// Checking Accept mime-types
 		$requested_mime_types = Request::accept_type();
 		$renderer_prefix = 'RESTful_ResponseRenderer_';
+		$config_defaults = Kohana::$config->load('restful.defaults');
 
 		if (count($requested_mime_types) == 0 OR (count($requested_mime_types) == 1 AND isset($requested_mime_types['*/*'])))
 		{
-			$this->_renderer = $renderer_prefix . $this->_response_types[Kohana::config('restful')->defaults['content-type']];
-			$this->request->headers['Content-Type'] = Kohana::config('restful')->defaults['content-type'];
+			$this->_renderer = $renderer_prefix . $this->_response_types[$config_defaults->get('content-type')];
+			$this->request->headers['Content-Type'] = $config_defaults->get('content-type');
 		}
 		else
 		{

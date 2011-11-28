@@ -110,7 +110,7 @@ abstract class RESTful_Controller extends Controller
 		}
 		else
 		{
-			$this->request->action() = $this->_action_map[$this->request->method()];
+			$this->request->action($this->_action_map[$this->request->method()]);
 		}
 
 		// Checking Content-Type. Considering only POST and PUT methods as other

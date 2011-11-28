@@ -24,7 +24,7 @@
  *
  * @todo		Caching responses
  * @todo		Fallback to $_POST['_method'] if detected
- * @todo		Authentication (Authorization: ... header
+ * @todo		Authentication (Authorization: ... header)
  * @todo		Move request related properties to $request property.
  */
 abstract class RESTful_Controller extends Controller

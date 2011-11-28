@@ -30,6 +30,16 @@
 abstract class RESTful_Controller extends Controller
 {
 	/**
+	 * @var RESTful_Request
+	 */
+	public $request;
+	
+	/**
+	 * @var RESTful_Response
+	 */
+	public $response;
+	
+	/**
 	 * @var array Array of possible actions.
 	 */
 	protected $_action_map = array(
@@ -81,7 +91,10 @@ abstract class RESTful_Controller extends Controller
 	protected $_renderer;
 
 	/**
-	 * @param Kohana_Request $request
+	 * Controller Constructor
+	 * 
+	 * @param Request $request
+	 * @param Response $response
 	 */
 	public function __construct(Request $request, Response $response)
 	{
@@ -89,8 +102,10 @@ abstract class RESTful_Controller extends Controller
 		set_exception_handler(array('RESTful', 'exception_handler'));
 		// Doesn't do anything as Koahana::shutdown_handler() takes precedence.
 		register_shutdown_function(array('RESTful', 'shutdown_handler'));
-
-		parent::__construct($request, $response);
+		
+		$this->request = RESTful_Request::factory();
+		$this->response = RESTful_Response::factory(array('_protocol' => $this->request->protocol()));
+		parent::__construct($this->request, $this->response);
 	}
 
 	/**

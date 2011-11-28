@@ -10,7 +10,7 @@ class RESTful_Core
 	 * Inline exception handler, displays the error message, source of the
 	 * exception, and the stack trace of the error.
 	 *
-	 * @uses    Kohana::exception_text
+	 * @uses    Kohana_Exception::text
 	 * @param   object   exception object
 	 * @return  boolean
 	 */
@@ -26,12 +26,12 @@ class RESTful_Core
 			$line    = $e->getLine();
 
 			// Create a text version of the exception
-			$error = Kohana::exception_text($e);
+			$error = Kohana_Exception::text($e);
 
 			if (is_object(Kohana::$log))
 			{
 				// Add this exception to the log
-				Kohana::$log->add(Kohana::ERROR, $error);
+				Kohana::$log->add(Log::ERROR, $error);
 
 				// Make sure the logs are written
 				Kohana::$log->write();
@@ -47,10 +47,10 @@ class RESTful_Core
 
 			if ($e instanceof ErrorException)
 			{
-				if (isset(Kohana::$php_errors[$code]))
+				if (isset(Kohana_Exception::$php_errors[$code]))
 				{
 					// Use the human-readable error name
-					$code = Kohana::$php_errors[$code];
+					$code = Kohana_Exception::$php_errors[$code];
 				}
 			}
 
@@ -73,7 +73,7 @@ class RESTful_Core
 			ob_get_level() and ob_clean();
 
 			// Display the exception text
-			echo Kohana::exception_text($e), "\n";
+			echo Kohana_Exception::text($e), "\n";
 
 			// Exit with an error status
 			// exit(1);

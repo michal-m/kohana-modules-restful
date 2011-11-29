@@ -13,8 +13,8 @@ class RESTful_RequestParser_JSON implements RESTful_IRequestParser
 	/**
 	 * @param string $data
 	 */
-	static public function parse($data)
+	static public function parse($request_body)
 	{
-		return json_decode($data);
+		return json_decode($request_body);
 	}
 }

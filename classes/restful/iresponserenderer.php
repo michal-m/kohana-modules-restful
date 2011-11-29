@@ -4,11 +4,14 @@
  * ResponseRenderer Interface
  *
  * @package		RESTful
- * @category	Renderers
+ * @category	Interfaces
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */
 interface RESTful_IResponseRenderer
 {
-	static public function render($input);
+	/**
+	 * @param mixed $data
+	 */
+	static public function render($data);
 }

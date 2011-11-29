@@ -13,11 +13,11 @@ class RESTful_ResponseRenderer_PLAIN implements RESTful_IResponseRenderer
 	/**
 	 * @param mixed $input
 	 */
-	static public function render($input)
+	static public function render($data)
 	{
-		if (is_object($input) AND ! method_exists($input, '__toString'))
-			return 'Object of ' . get_class($input) . ' class';
+		if (is_object($data) AND ! method_exists($data, '__toString'))
+			return 'Object of ' . get_class($data) . ' class';
 		else
-			return (string) $input;
+			return (string) $data;
 	}
 }

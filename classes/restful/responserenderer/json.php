@@ -13,9 +13,9 @@ class RESTful_ResponseRenderer_JSON implements RESTful_IResponseRenderer
 	/**
 	 * @param mixed $input
 	 */
-	static public function render($input)
+	static public function render($data)
 	{
-		return self::format(json_encode($input));
+		return self::format(json_encode($data));
 	}
 
 	/**

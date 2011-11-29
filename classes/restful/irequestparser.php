@@ -3,11 +3,14 @@
  * RequestParser Interface
  *
  * @package		RESTful
- * @category	Parsers
+ * @category	Interfaces
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */
 interface RESTful_IRequestParser
 {
-	static public function parse($data);
+	/**
+	 * @param string $request_body
+	 */
+	static public function parse($request_body);
 }

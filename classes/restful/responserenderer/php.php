@@ -13,8 +13,8 @@ class RESTful_ResponseRenderer_PHP implements RESTful_IResponseRenderer
 	/**
 	 * @param mixed $input
 	 */
-	static public function render($input)
+	static public function render($data)
 	{
-		return serialize($input);
+		return serialize($data);
 	}
 }

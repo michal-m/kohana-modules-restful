@@ -138,11 +138,15 @@ abstract class RESTful_Controller extends Controller
 
 		// Checking Content-Type. Considering only POST and PUT methods as other
 		// shouldn't have any content.
-		if (in_array($method, array('POST', 'PUT')))
+		if (in_array($method, array(HTTP_Request::POST, HTTP_Request::PUT)))
 		{
-			$request_content_type = (array_key_exists('CONTENT_TYPE', $_SERVER)) ? $_SERVER['CONTENT_TYPE'] : FALSE;
-			$parser_prefix = 'RESTful_RequestParser_';
-
+			$request_content_type = Arr::get($_SERVER, 'CONTENT_TYPE', FALSE);
+			
+			if ($request_content_type === FALSE)
+			{
+				throw new HTTP_Exception_400('NO_CONTENT_TYPE_PROVIDED');
+			}
+			
 			if ( ! array_key_exists($request_content_type, $this->_accept_types) OR
 				 ! class_exists($parser_prefix . $this->_accept_types[$request_content_type]))
 			{

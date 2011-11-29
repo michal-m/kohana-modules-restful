@@ -100,11 +100,8 @@ abstract class RESTful_Controller extends Controller
 	 */
 	public function __construct(Request $request, Response $response)
 	{
-		if (Kohana::$errors === TRUE)
-		{
-			// Enable RESTful internal error handling
-			set_exception_handler(array('RESTful', 'exception_handler'));
-		}
+		// Enable RESTful internal error handling
+		set_exception_handler(array('RESTful', 'exception_handler'));
 		
 		parent::__construct($request, $response);
 	}

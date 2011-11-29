@@ -16,6 +16,7 @@ class RESTful_RequestParser_JSON implements RESTful_IRequestParser
 	 */
 	static public function parse($request_body)
 	{
-		return json_decode($request_body);
+		$decoded = json_decode($request_body);
+		return (json_last_error() === JSON_ERROR_NONE) ? $decoded : FALSE;
 	}
 }

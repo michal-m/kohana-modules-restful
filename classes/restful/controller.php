@@ -100,10 +100,13 @@ abstract class RESTful_Controller extends Controller
 	 */
 	public function __construct(Request $request, Response $response)
 	{
-		// Enable RESTful internal error handling
-		set_exception_handler(array('RESTful', 'exception_handler'));
-		// Doesn't do anything as Koahana::shutdown_handler() takes precedence.
-		register_shutdown_function(array('RESTful', 'shutdown_handler'));
+		if (Kohana::$errors === TRUE)
+		{
+			// Enable RESTful internal error handling
+			set_exception_handler(array('RESTful', 'exception_handler'));
+			// Doesn't do anything as Koahana::shutdown_handler() takes precedence.
+			register_shutdown_function(array('RESTful', 'shutdown_handler'));
+		}
 		
 		parent::__construct($request, $response);
 	}

@@ -4,6 +4,7 @@
  * Exception class for RESTful API implementation
  *
  * @package		RESTful
+ * @category	Exceptions
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */

@@ -18,9 +18,10 @@
  * Additional methods can be supported by adding the method and action to
  * the `$_action_map` property.
  *
- * @package    RESTful
- * @author     Michał Musiał
- * @copyright  (c) 2011 Michał Musiał
+ * @package		RESTful
+ * @category	Controllers
+ * @author		Michał Musiał
+ * @copyright	(c) 2011 Michał Musiał
  *
  * @todo		Caching responses
  * @todo		Fallback to $_POST['_method'] if detected

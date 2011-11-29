@@ -214,10 +214,26 @@ abstract class RESTful_Controller extends Controller
 	}
 	
 	/**
+	 * Renders response body using renderer selected during before().
 	 * Prevents caching for PUT/POST/DELETE request methods.
 	 */
 	public function after()
 	{
+		// Render response body
+		$body = call_user_func(array($this->_renderer, 'render'), $this->response->body());
+
+		if ($body !== FALSE)
+		{
+			$this->response->body($body);
+		}
+		else
+		{
+			throw new HTTP_Exception_500(
+				'Error generating response content using in: :mime.',
+				array(':mime' => '')
+			);
+		}
+		
 		// Prevent caching
 		if (in_array(Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method()), array(
 			HTTP_Request::PUT,
@@ -236,25 +252,5 @@ abstract class RESTful_Controller extends Controller
 		// Send the "Method Not Allowed" response
 		$this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
 		throw new HTTP_Exception_405();
-	}
-
-	/**
-	 * @param mixed $input
-	 */
-	protected final function _set_response_content($input)
-	{
-		$response = call_user_func(array($this->_renderer, 'render'), $input);
-
-		if ($response !== FALSE)
-		{
-			$this->response->body($response);
-		}
-		else
-		{
-			throw new HTTP_Exception_500(
-				'Error generating response content using in: :mime.',
-				array(':mime' => '')
-			);
-		}
 	}
 }

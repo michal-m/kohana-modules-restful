@@ -103,9 +103,7 @@ abstract class RESTful_Controller extends Controller
 		// Doesn't do anything as Koahana::shutdown_handler() takes precedence.
 		register_shutdown_function(array('RESTful', 'shutdown_handler'));
 		
-		$this->request = RESTful_Request::factory();
-		$this->response = RESTful_Response::factory(array('_protocol' => $this->request->protocol()));
-		parent::__construct($this->request, $this->response);
+		parent::__construct($request, $response);
 	}
 
 	/**

@@ -101,7 +101,9 @@ abstract class RESTful_Controller extends Controller
 	public function __construct(Request $request, Response $response)
 	{
 		// Enable RESTful internal error handling
-		set_exception_handler(array('RESTful', 'exception_handler'));
+		set_exception_handler(array('RESTful_Exception', 'handler'));
+		// Enable Kohana error handling, converts all PHP errors to exceptions.
+		set_error_handler(array('RESTful', 'error_handler'));
 		
 		parent::__construct($request, $response);
 	}
@@ -118,8 +120,11 @@ abstract class RESTful_Controller extends Controller
 		if ( ! isset($this->_action_map[$this->request->method()]))
 		{
 			$this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
-			$this->_error(405);
-			return FALSE;
+			throw new HTTP_Exception_405();
+		}
+		elseif ( ! method_exists($this, 'action_' . $this->_action_map[$this->request->method()]))
+		{
+			throw new HTTP_Exception_500('METHOD_MISCONFIGURED');
 		}
 		else
 		{
@@ -136,8 +141,7 @@ abstract class RESTful_Controller extends Controller
 			if ( ! array_key_exists($request_content_type, $this->_accept_types) OR
 				 ! class_exists($parser_prefix . $this->_accept_types[$request_content_type]))
 			{
-				$this->_error(415);
-				return FALSE;
+				throw new HTTP_Exception_415();
 			}
 			else
 			{
@@ -164,8 +168,7 @@ abstract class RESTful_Controller extends Controller
 
 			if ($this->_request_data === FALSE)
 			{
-				$this->_error(500, 'ERROR_PARSING_REQUEST_DATA');
-				return FALSE;
+				throw new HTTP_Exception_400('MALFORMED_REQUEST_BODY');
 			}
 		}
 
@@ -196,27 +199,13 @@ abstract class RESTful_Controller extends Controller
 		// that is when it uses GET method.
 		if ($this->request->method() == 'GET' AND ! $this->_renderer)
 		{
-			$this->_error(406, 'This service delivers following types: ' . implode(', ', array_keys($this->_response_types)) . '.');
-			return FALSE;
+			throw new HTTP_Exception_406(
+				'This service delivers following types: :types.',
+				array(':types' => implode(', ', array_keys($this->_response_types)))
+			);
 		}
 		
 		return TRUE;
-	}
-
-	/**
-	 * @param int $status
-	 * @param string $msg 
-	 */
-	protected function _error($status = 500, $msg = '')
-	{
-		$this->request->action('error');
-		$this->response->status($status);
-
-		if (strlen($msg))
-		{
-			$this->response->headers('Content-Type', 'text/plain');
-			$this->response->body($msg);
-		}
 	}
 
 	/**
@@ -232,9 +221,10 @@ abstract class RESTful_Controller extends Controller
 		}
 		else
 		{
-			throw new RESTful_Exception(
-				':error',
-				array(':error' => 'Error generating response content using ' . $this->_renderer));
+			throw new HTTP_Exception_500(
+				'Error generating response content using in: :mime.',
+				array(':mime' => '')
+			);
 		}
 	}
 

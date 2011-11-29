@@ -40,7 +40,7 @@ class RESTful_Exception extends Kohana_Exception
 				// Make sure the logs are written
 				Kohana::$log->write();
 			}
-
+			
 			if (Kohana::$is_cli)
 			{
 				// Just display the text of the exception
@@ -60,13 +60,18 @@ class RESTful_Exception extends Kohana_Exception
 
 			if ( ! headers_sent())
 			{
-				// Make sure the proper content type is sent with a 500 status
-				header('Content-Type: text/plain; charset='.Kohana::$charset, TRUE, 500);
+				Request::$current->response()->status($code);
+				Request::$current->response()->headers('Content-Type', 'text/plain; charset='.Kohana::$charset);
+				Request::$current->response()->send_headers();
 			}
 
 			if (Kohana::$environment === Kohana::DEVELOPMENT)
 			{
 				echo $error;
+			}
+			else
+			{
+				echo $message;
 			}
 
 			return TRUE;
@@ -76,8 +81,17 @@ class RESTful_Exception extends Kohana_Exception
 			// Clean the output buffer if one exists
 			ob_get_level() and ob_clean();
 
-			// Display the exception text
-			echo Kohana_Exception::text($e), "\n";
+			// Make sure the proper content type is sent with a 500 status
+			header('Content-Type: text/plain; charset='.Kohana::$charset, TRUE, 500);
+			// Display the exception message
+			if (Kohana::$environment === Kohana::DEVELOPMENT)
+			{
+				echo Kohana_Exception::text($e), "\n";
+			}
+			else
+			{
+				echo $e->getMessage(), "\n";
+			}
 
 			// Exit with an error status
 			// exit(1);

@@ -11,7 +11,8 @@
 class RESTful_ResponseRenderer_JSON implements RESTful_IResponseRenderer
 {
 	/**
-	 * @param mixed $input
+	 * @param	mixed $input
+	 * @return	string
 	 */
 	static public function render($data)
 	{
@@ -19,9 +20,9 @@ class RESTful_ResponseRenderer_JSON implements RESTful_IResponseRenderer
 	}
 
 	/**
-	 * @param string $json
-	 * @author umbrae@gmail.com
-	 * @link http://www.php.net/manual/en/function.json-encode.php#80339
+	 * @param	string $json
+	 * @author	umbrae@gmail.com
+	 * @link	http://www.php.net/manual/en/function.json-encode.php#80339
 	 */
 	static public function format($json)
 	{

@@ -11,7 +11,8 @@
 class RESTful_RequestParser_URLENC implements RESTful_IRequestParser
 {
 	/**
-	 * @param string $data
+	 * @param	string $data
+	 * @return	array
 	 */
 	static public function parse($request_body)
 	{

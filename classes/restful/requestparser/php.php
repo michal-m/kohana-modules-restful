@@ -11,10 +11,11 @@
 class RESTful_RequestParser_PHP implements RESTful_IRequestParser
 {
 	/**
-	 * @param string $data
+	 * @param	string $data
+	 * @return	mixed
 	 */
 	static public function parse($request_body)
 	{
-		return unserialize($request_body);
+		return @unserialize($request_body);
 	}
 }

@@ -11,7 +11,8 @@
 class RESTful_ResponseRenderer_PRINTR implements RESTful_IResponseRenderer
 {
 	/**
-	 * @param mixed $input
+	 * @param	mixed $input
+	 * @return	string
 	 */
 	static public function render($data)
 	{

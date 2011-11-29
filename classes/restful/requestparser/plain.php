@@ -11,7 +11,8 @@
 class RESTful_RequestParser_PLAIN implements RESTful_IRequestParser
 {
 	/**
-	 * @param string $data
+	 * @param	string $data
+	 * @return	string
 	 */
 	static public function parse($request_body)
 	{

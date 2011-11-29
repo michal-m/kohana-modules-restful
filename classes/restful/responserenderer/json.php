@@ -16,7 +16,9 @@ class RESTful_ResponseRenderer_JSON implements RESTful_IResponseRenderer
 	 */
 	static public function render($data)
 	{
-		return self::format(json_encode($data));
+		$json = json_encode($data);
+		
+		return (json_last_error() === JSON_ERROR_NONE) ? self::format($json) : FALSE;
 	}
 
 	/**
@@ -30,13 +32,6 @@ class RESTful_ResponseRenderer_JSON implements RESTful_IResponseRenderer
 		$new_json = "";
 		$indent_level = 0;
 		$in_string = FALSE;
-
-		$json_obj = json_decode($json);
-
-		if ($json_obj === FALSE)
-			return FALSE;
-
-		$json = json_encode($json_obj);
 		$len = strlen($json);
 
 		for ($c = 0; $c < $len; $c++)

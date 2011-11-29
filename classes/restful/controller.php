@@ -18,6 +18,10 @@
  * Additional methods can be supported by adding the method and action to
  * the `$_action_map` property.
  *
+ * [!!] Using this class within a website will require heavy modification,
+ * due to most web browsers only supporting the GET and POST methods.
+ * Generally, this class should only be used for web services and APIs.
+ *
  * @package		RESTful
  * @category	Controllers
  * @author		Michał Musiał
@@ -45,10 +49,10 @@ abstract class RESTful_Controller extends Controller
 	 * @var array Array of possible actions.
 	 */
 	protected $_action_map = array(
-		'GET'    => 'get',
-		'PUT'    => 'update',
-		'POST'   => 'create',
-		'DELETE' => 'delete',
+		HTTP_Request::GET    => 'get',
+		HTTP_Request::PUT    => 'update',
+		HTTP_Request::POST   => 'create',
+		HTTP_Request::DELETE => 'delete',
 	);
 
 	/**
@@ -116,24 +120,25 @@ abstract class RESTful_Controller extends Controller
 		// Defaulting output content type to text/plain - will hopefully be overriden later
 		$this->response->headers('Content-Type', 'text/plain');
 		
+		$method = Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method());
+		
 		// Checking requested method
-		if ( ! isset($this->_action_map[$this->request->method()]))
+		if ( ! isset($this->_action_map[$method]))
 		{
-			$this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
-			throw new HTTP_Exception_405();
+			return $this->request->action('invalid');
 		}
-		elseif ( ! method_exists($this, 'action_' . $this->_action_map[$this->request->method()]))
+		elseif ( ! method_exists($this, 'action_' . $this->_action_map[$method]))
 		{
 			throw new HTTP_Exception_500('METHOD_MISCONFIGURED');
 		}
 		else
 		{
-			$this->request->action($this->_action_map[$this->request->method()]);
+			$this->request->action($this->_action_map[$method]);
 		}
 
 		// Checking Content-Type. Considering only POST and PUT methods as other
 		// shouldn't have any content.
-		if (in_array($this->request->method(), array('POST', 'PUT')))
+		if (in_array($method, array('POST', 'PUT')))
 		{
 			$request_content_type = (array_key_exists('CONTENT_TYPE', $_SERVER)) ? $_SERVER['CONTENT_TYPE'] : FALSE;
 			$parser_prefix = 'RESTful_RequestParser_';
@@ -197,7 +202,7 @@ abstract class RESTful_Controller extends Controller
 
 		// Script should fail only if requester expects any content returned,
 		// that is when it uses GET method.
-		if ($this->request->method() == 'GET' AND ! $this->_renderer)
+		if ($method === HTTP_Request::GET AND ! $this->_renderer)
 		{
 			throw new HTTP_Exception_406(
 				'This service delivers following types: :types.',
@@ -206,6 +211,31 @@ abstract class RESTful_Controller extends Controller
 		}
 		
 		return TRUE;
+	}
+	
+	/**
+	 * Prevents caching for PUT/POST/DELETE request methods.
+	 */
+	public function after()
+	{
+		// Prevent caching
+		if (in_array(Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method()), array(
+			HTTP_Request::PUT,
+			HTTP_Request::POST,
+			HTTP_Request::DELETE)))
+		{
+			$this->response->headers('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate');
+		}
+	}
+	
+	/**
+	 * Throws a HTTP_Exception_405 as a response with a list of allowed actions.
+	 */
+	public function action_invalid()
+	{
+		// Send the "Method Not Allowed" response
+		$this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
+		throw new HTTP_Exception_405();
 	}
 
 	/**

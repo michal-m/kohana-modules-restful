@@ -8,7 +8,7 @@
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */
-class RESTful_ResponseRenderer_PHP implements RESTful_IResponseRenderer
+class RESTful_ResponseRenderer_PHP_Object implements RESTful_IResponseRenderer
 {
 	/**
 	 * @param mixed $input

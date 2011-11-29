@@ -7,5 +7,7 @@ RESTful::register_parser('text/plain',							'RESTful_RequestParser_PLAIN::parse
 
 RESTful::register_renderer('application/json',					'RESTful_ResponseRenderer_JSON::render');
 RESTful::register_renderer('application/php-serialized',		'RESTful_ResponseRenderer_PHP::render');
+RESTful::register_renderer('application/php-serialized-array',	'RESTful_ResponseRenderer_PHP_Array::render');
+RESTful::register_renderer('application/php-serialized-object',	'RESTful_ResponseRenderer_PHP_Object::render');
 RESTful::register_renderer('text/php-printr',					'RESTful_ResponseRenderer_PRINTR::render');
 RESTful::register_renderer('text/plain',						'RESTful_ResponseRenderer_PLAIN::render');

@@ -257,9 +257,4 @@ abstract class RESTful_Controller extends Controller
 			);
 		}
 	}
-
-	/**
-	 * Error action.
-	 */
-	public function action_error() {}
 }

@@ -56,45 +56,12 @@ abstract class RESTful_Controller extends Controller
 	);
 
 	/**
-	 * @var array Array of mime-types this controller is able to respond
-	 *			  with. Format:
-	 *			  mime-type => renderer
-	 */
-	protected $_response_types = array(
-		'application/json'				=> 'JSON',
-		'text/plain'					=> 'PLAIN',
-		'application/php-serialized'	=> 'PHP',
-		'text/php-printr'				=> 'PRINTR',
-	);
-
-	/**
-	 * @var array Array of mime-types this controller is able to
-	 *			  understand (when request method is POST or PUT). Format:
-	 *			  mime-type => parser
-	 */
-	protected $_accept_types = array(
-		'text/plain'						=> 'PLAIN',
-		'application/x-www-form-urlencoded'	=> 'URLENC',
-		'application/json'					=> 'JSON',
-		'application/php-serialized'		=> 'PHP',
-	);
-
-	/**
-	 * @var string
-	 */
-	protected $_request_data_raw;
-
-	/**
-	 * @var mixed
-	 */
-	protected $_request_data;
-
-	/**
-	 * Full name of the Renderer class
+	 * Array of all acceptable content-types provided with the request's Accept
+	 * header
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $_renderer;
+	private $_request_accept_types;
 
 	/**
 	 * Controller Constructor
@@ -147,35 +114,29 @@ abstract class RESTful_Controller extends Controller
 				throw new HTTP_Exception_400('NO_CONTENT_TYPE_PROVIDED');
 			}
 			
-			if ( ! array_key_exists($request_content_type, $this->_accept_types) OR
-				 ! class_exists($parser_prefix . $this->_accept_types[$request_content_type]))
+			if (RESTful_RequestParser::get($request_content_type) === FALSE)
 			{
 				throw new HTTP_Exception_415();
 			}
 			else
 			{
-				// Looking for Raw POST data
-				if (isset($HTTP_RAW_POST_DATA))
-				{
-					$this->_request_data_raw = $HTTP_RAW_POST_DATA;
-				}
-				else
-				{
-					$this->_request_data_raw = file_get_contents('php://input');
-				}
+				$request_body = $this->request->body();
 				
-				if ( ! empty($this->_request_data_raw))
+				if (strlen($request_body) > 0)
 				{
-					$parser = $parser_prefix . $this->_accept_types[$request_content_type];
-					$this->_request_data = call_user_func(array($parser, 'parse'), $this->_request_data_raw);
+					$request_data = call_user_func(RESTful_RequestParser::get($request_content_type), $request_body);
 				}
 				else
 				{
-					$this->_request_data = $_POST;
+					$request_data = $_POST;
 				}
 			}
 
-			if ($this->_request_data === FALSE)
+			if ($request_data !== FALSE AND ! empty($request_data))
+			{
+				$this->request->body($request_data);
+			}
+			else
 			{
 				throw new HTTP_Exception_400('MALFORMED_REQUEST_BODY');
 			}
@@ -183,23 +144,19 @@ abstract class RESTful_Controller extends Controller
 
 		// Checking Accept mime-types
 		$requested_mime_types = Request::accept_type();
-		$renderer_prefix = 'RESTful_ResponseRenderer_';
 		$config_defaults = Kohana::$config->load('restful.defaults');
 
 		if (count($requested_mime_types) == 0 OR (count($requested_mime_types) == 1 AND isset($requested_mime_types['*/*'])))
 		{
-			$this->response->headers('Content-Type', $config_defaults->get('content-type'));
-			$this->_renderer = $renderer_prefix . $this->_response_types[$config_defaults->get('content-type')];
+			$this->_request_accept_types[] = $config_defaults->get('content-type');
 		}
 		else
 		{
 			foreach ($requested_mime_types as $type => $q)
 			{
-				if (array_key_exists($type, $this->_response_types))
+				if (RESTful_ResponseRenderer::get($type) !== FALSE)
 				{
-					$this->response->headers('Content-Type', $type);
-					$this->_renderer = $renderer_prefix . $this->_response_types[$type];
-					break;
+					$this->_request_accept_types[] = $type;
 				}
 			}
 		}
@@ -223,20 +180,28 @@ abstract class RESTful_Controller extends Controller
 	 */
 	public function after()
 	{
+		$original_body = $this->response->body();
+		$success = FALSE;
+		
 		// Render response body
-		$body = call_user_func(array($this->_renderer, 'render'), $this->response->body());
-
-		if ($body !== FALSE)
+		foreach ($this->_request_accept_types as $type)
 		{
-			$this->response->body($body);
+			$body = call_user_func(RESTful_ResponseRenderer::get($type), $original_body);
+			
+			if ($body !== FALSE)
+			{
+				$this->response->body($body);
+				$success = TRUE;
+				break;
+			}
 		}
-		else
+		
+		if ($success === FALSE)
 		{
-			throw new HTTP_Exception_500(
-				'Error generating response content using in: :mime.',
-				array(':mime' => '')
-			);
+			throw new HTTP_Exception_500('RESPONSE_RENDERER_FAILURE');
 		}
+		
+		unset($original_body, $success);
 		
 		// Prevent caching
 		if (in_array(Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method()), array(

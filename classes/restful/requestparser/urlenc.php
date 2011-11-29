@@ -16,6 +16,8 @@ class RESTful_RequestParser_URLENC implements RESTful_IRequestParser
 	 */
 	static public function parse($request_body)
 	{
-		return urldecode($request_body);
+		$data = array();
+		parse_str($request_body, $data);
+		return $data;
 	}
 }

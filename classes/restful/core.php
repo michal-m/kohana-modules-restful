@@ -100,12 +100,6 @@ class RESTful_Core
 	 */
 	public static function shutdown_handler()
 	{
-		if ( ! Kohana::$_init)
-		{
-			// Do not execute when not active
-			return;
-		}
-
 		try
 		{
 			if (Kohana::$caching === TRUE AND Kohana::$_files_changed === TRUE)

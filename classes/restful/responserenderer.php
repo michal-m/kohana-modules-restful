@@ -26,7 +26,7 @@ class RESTful_ResponseRenderer
 		}
 		else
 		{
-			return (array_key_exists($type, self::$_renderers)) ? self::$_renderers[$type] : FALSE;
+			return Arr::get(self::$_renderers, $type, FALSE);
 		}
 	}
 	

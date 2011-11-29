@@ -25,7 +25,7 @@ class RESTful_RequestParser
 		}
 		else
 		{
-			return (array_key_exists($type, self::$_parsers)) ? self::$_parsers[$type] : FALSE;
+			return Arr::get(self::$_parsers, $type, FALSE);
 		}
 	}
 	

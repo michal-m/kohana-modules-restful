@@ -36,16 +36,6 @@
 abstract class RESTful_Controller extends Controller
 {
 	/**
-	 * @var RESTful_Request
-	 */
-	public $request;
-	
-	/**
-	 * @var RESTful_Response
-	 */
-	public $response;
-	
-	/**
 	 * @var array Array of possible actions.
 	 */
 	protected $_action_map = array(
@@ -61,7 +51,7 @@ abstract class RESTful_Controller extends Controller
 	 *
 	 * @var array
 	 */
-	private $_request_accept_types;
+	private $_request_accept_types = array();
 
 	/**
 	 * Controller Constructor

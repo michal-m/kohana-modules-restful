@@ -104,7 +104,7 @@ abstract class RESTful_Controller extends Controller
 				throw new HTTP_Exception_400('NO_CONTENT_TYPE_PROVIDED');
 			}
 			
-			if (RESTful_RequestParser::get($request_content_type) === FALSE)
+			if (RESTful_Request::get_parser($request_content_type) === FALSE)
 			{
 				throw new HTTP_Exception_415();
 			}
@@ -114,7 +114,7 @@ abstract class RESTful_Controller extends Controller
 				
 				if (strlen($request_body) > 0)
 				{
-					$request_data = call_user_func(RESTful_RequestParser::get($request_content_type), $request_body);
+					$request_data = call_user_func(RESTful_Request::get_parser($request_content_type), $request_body);
 				}
 				else
 				{
@@ -144,7 +144,7 @@ abstract class RESTful_Controller extends Controller
 		{
 			foreach ($requested_mime_types as $type => $q)
 			{
-				if (RESTful_ResponseRenderer::get($type) !== FALSE)
+				if (RESTful_Response::get_renderer($type) !== FALSE)
 				{
 					$this->_request_accept_types[] = $type;
 				}
@@ -176,7 +176,7 @@ abstract class RESTful_Controller extends Controller
 		// Render response body
 		foreach ($this->_request_accept_types as $type)
 		{
-			$body = call_user_func(RESTful_ResponseRenderer::get($type), $original_body);
+			$body = call_user_func(RESTful_Response::get_renderer($type), $original_body);
 			
 			if ($body !== FALSE)
 			{

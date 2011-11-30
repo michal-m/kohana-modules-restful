@@ -8,7 +8,7 @@
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */
-class RESTful_ResponseRenderer_PRINTR implements RESTful_IResponseRenderer
+class RESTful_Response_Renderer_PRINTR implements RESTful_Response_IRenderer
 {
 	/**
 	 * @param	mixed $input

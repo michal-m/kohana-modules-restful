@@ -1,13 +1,13 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-RESTful_RequestParser::register('application/json',						'RESTful_RequestParser_JSON::parse');
-RESTful_RequestParser::register('application/php-serialized',			'RESTful_RequestParser_PHP::parse');
-RESTful_RequestParser::register('application/x-www-form-urlencoded',	'RESTful_RequestParser_URLENC::parse');
-RESTful_RequestParser::register('text/plain',							'RESTful_RequestParser_PLAIN::parse');
+RESTful_Request::register_parser('application/json',						'RESTful_Request_Parser_JSON::parse');
+RESTful_Request::register_parser('application/php-serialized',				'RESTful_Request_Parser_PHP::parse');
+RESTful_Request::register_parser('application/x-www-form-urlencoded',		'RESTful_Request_Parser_URLENC::parse');
+RESTful_Request::register_parser('text/plain',								'RESTful_Request_Parser_PLAIN::parse');
 
-RESTful_ResponseRenderer::register('application/json',					'RESTful_ResponseRenderer_JSON::render');
-RESTful_ResponseRenderer::register('application/php-serialized',		'RESTful_ResponseRenderer_PHP::render');
-RESTful_ResponseRenderer::register('application/php-serialized-array',	'RESTful_ResponseRenderer_PHP_Array::render');
-RESTful_ResponseRenderer::register('application/php-serialized-object',	'RESTful_ResponseRenderer_PHP_Object::render');
-RESTful_ResponseRenderer::register('text/php-printr',					'RESTful_ResponseRenderer_PRINTR::render');
-RESTful_ResponseRenderer::register('text/plain',						'RESTful_ResponseRenderer_PLAIN::render');
+RESTful_Response::register_renderer('application/json',						'RESTful_Response_Renderer_JSON::render');
+RESTful_Response::register_renderer('application/php-serialized',			'RESTful_Response_Renderer_PHP::render');
+RESTful_Response::register_renderer('application/php-serialized-array',		'RESTful_Response_Renderer_PHP_Array::render');
+RESTful_Response::register_renderer('application/php-serialized-object',	'RESTful_Response_Renderer_PHP_Object::render');
+RESTful_Response::register_renderer('text/php-printr',						'RESTful_Response_Renderer_PRINTR::render');
+RESTful_Response::register_renderer('text/plain',							'RESTful_Response_Renderer_PLAIN::render');

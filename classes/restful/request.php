@@ -1,12 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * RequestParser Interface
+ * RESTful Request class
  *
  * @package		RESTful
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */
-class RESTful_RequestParser
+class RESTful_Request
 {
 	/**
 	 * @var	array
@@ -17,7 +17,7 @@ class RESTful_RequestParser
 	 * @param	string $type
 	 * @return	mixed Returns all parsers if $type not specified, a parser callback if found or boolean FALSE otherwise
 	 */
-	public static function get($type = NULL)
+	public static function get_parser($type = NULL)
 	{
 		if ($type === NULL)
 		{
@@ -34,7 +34,7 @@ class RESTful_RequestParser
 	 * @param	callback $callback
 	 * @return	mixed Returns previous parser if one existed or TRUE otherwise
 	 */
-	public static function register($type, $callback)
+	public static function register_parser($type, $callback)
 	{
 		if (array_key_exists($type, self::$_parsers))
 		{

@@ -1,13 +1,13 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * ResponseRenderer Interface
+ * RESTful Response class
  *
  * @package		RESTful
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */
-class RESTful_ResponseRenderer
+class RESTful_Response
 {
 	/**
 	 * @var	array
@@ -18,7 +18,7 @@ class RESTful_ResponseRenderer
 	 * @param	string $type
 	 * @return	mixed Returns all renderers if $type not specified, a parser callback if found or boolean FALSE otherwise
 	 */
-	public static function get($type = NULL)
+	public static function get_renderer($type = NULL)
 	{
 		if ($type === NULL)
 		{
@@ -35,7 +35,7 @@ class RESTful_ResponseRenderer
 	 * @param	callback $callback
 	 * @return	mixed Returns previous renderer if one existed or TRUE otherwise
 	 */
-	public static function register($type, $callback)
+	public static function register_renderer($type, $callback)
 	{
 		if (array_key_exists($type, self::$_renderers))
 		{

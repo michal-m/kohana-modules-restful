@@ -1,17 +1,16 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
- * ResponseRenderer Interface
+ * RESTful Request Parser Interface
  *
  * @package		RESTful
  * @category	Interfaces
  * @author		Michał Musiał
  * @copyright	(c) 2011 Michał Musiał
  */
-interface RESTful_IResponseRenderer
+interface RESTful_Request_IParser
 {
 	/**
-	 * @param mixed $data
+	 * @param string $request_body
 	 */
-	static public function render($data);
+	static public function parse($request_body);
 }

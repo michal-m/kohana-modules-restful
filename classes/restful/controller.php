@@ -55,7 +55,7 @@ abstract class RESTful_Controller extends Controller
 
 	/**
 	 * Controller Constructor
-	 * 
+	 *
 	 * @param Request $request
 	 * @param Response $response
 	 */
@@ -65,7 +65,7 @@ abstract class RESTful_Controller extends Controller
 		set_exception_handler(array('RESTful_Exception', 'handler'));
 		// Enable Kohana error handling, converts all PHP errors to exceptions.
 		set_error_handler(array('RESTful', 'error_handler'));
-		
+
 		parent::__construct($request, $response);
 	}
 
@@ -76,9 +76,9 @@ abstract class RESTful_Controller extends Controller
 	{
 		// Defaulting output content type to text/plain - will hopefully be overriden later
 		$this->response->headers('Content-Type', 'text/plain');
-		
+
 		$method = Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method());
-		
+
 		// Checking requested method
 		if ( ! isset($this->_action_map[$method]))
 		{
@@ -98,12 +98,12 @@ abstract class RESTful_Controller extends Controller
 		if (in_array($method, array(HTTP_Request::POST, HTTP_Request::PUT)))
 		{
 			$request_content_type = Arr::get($_SERVER, 'CONTENT_TYPE', FALSE);
-			
+
 			if ($request_content_type === FALSE)
 			{
 				throw new HTTP_Exception_400('NO_CONTENT_TYPE_PROVIDED');
 			}
-			
+
 			if (RESTful_Request::get_parser($request_content_type) === FALSE)
 			{
 				throw new HTTP_Exception_415();
@@ -111,7 +111,7 @@ abstract class RESTful_Controller extends Controller
 			else
 			{
 				$request_body = $this->request->body();
-				
+
 				if (strlen($request_body) > 0)
 				{
 					$request_data = call_user_func(RESTful_Request::get_parser($request_content_type), $request_body);
@@ -153,17 +153,17 @@ abstract class RESTful_Controller extends Controller
 
 		// Script should fail only if requester expects any content returned,
 		// that is when it uses GET method.
-		if ($method === HTTP_Request::GET AND ! $this->_renderer)
+		if ($method === HTTP_Request::GET AND empty($this->_request_accept_types))
 		{
 			throw new HTTP_Exception_406(
 				'This service delivers following types: :types.',
 				array(':types' => implode(', ', array_keys($this->_response_types)))
 			);
 		}
-		
+
 		return TRUE;
 	}
-	
+
 	/**
 	 * Renders response body using renderer selected during before().
 	 * Prevents caching for PUT/POST/DELETE request methods.
@@ -172,12 +172,12 @@ abstract class RESTful_Controller extends Controller
 	{
 		$original_body = $this->response->body();
 		$success = FALSE;
-		
+
 		// Render response body
 		foreach ($this->_request_accept_types as $type)
 		{
 			$body = call_user_func(RESTful_Response::get_renderer($type), $original_body);
-			
+
 			if ($body !== FALSE)
 			{
 				$this->response->body($body);
@@ -185,14 +185,14 @@ abstract class RESTful_Controller extends Controller
 				break;
 			}
 		}
-		
+
 		if ($success === FALSE)
 		{
 			throw new HTTP_Exception_500('RESPONSE_RENDERER_FAILURE');
 		}
-		
+
 		unset($original_body, $success);
-		
+
 		// Prevent caching
 		if (in_array(Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method()), array(
 			HTTP_Request::PUT,
@@ -202,7 +202,7 @@ abstract class RESTful_Controller extends Controller
 			$this->response->headers('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate');
 		}
 	}
-	
+
 	/**
 	 * Throws a HTTP_Exception_405 as a response with a list of allowed actions.
 	 */

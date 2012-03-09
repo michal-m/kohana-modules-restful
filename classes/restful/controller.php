@@ -25,7 +25,7 @@
  * @package		RESTful
  * @category	Controllers
  * @author		Michał Musiał
- * @copyright	(c) 2011 Michał Musiał
+ * @copyright	(c) 2012 Michał Musiał
  *
  * @todo		Caching responses
  * @todo		Fallback to $_POST['_method'] if detected
@@ -35,7 +35,7 @@
  */
 abstract class RESTful_Controller extends Controller
 {
-	/**
+    /**
 	 * @var array Array of possible actions.
 	 */
 	protected $_action_map = array(
@@ -45,7 +45,7 @@ abstract class RESTful_Controller extends Controller
 		HTTP_Request::DELETE => 'delete',
 	);
 
-	/**
+    /**
 	 * Array of all acceptable content-types provided with the request's Accept
 	 * header
 	 *
@@ -138,7 +138,7 @@ abstract class RESTful_Controller extends Controller
 
 		if (count($requested_mime_types) == 0 OR (count($requested_mime_types) == 1 AND isset($requested_mime_types['*/*'])))
 		{
-			$this->_request_accept_types[] = $config_defaults->get('content-type');
+			$this->_request_accept_types[] = $config_defaults['content-type'];
 		}
 		else
 		{
@@ -164,34 +164,12 @@ abstract class RESTful_Controller extends Controller
 		return TRUE;
 	}
 
-	/**
-	 * Renders response body using renderer selected during before().
-	 * Prevents caching for PUT/POST/DELETE request methods.
-	 */
-	public function after()
-	{
-		$original_body = $this->response->body();
-		$success = FALSE;
-
-		// Render response body
-		foreach ($this->_request_accept_types as $type)
-		{
-			$body = call_user_func(RESTful_Response::get_renderer($type), $original_body);
-
-			if ($body !== FALSE)
-			{
-				$this->response->body($body);
-				$success = TRUE;
-				break;
-			}
-		}
-
-		if ($success === FALSE)
-		{
-			throw new HTTP_Exception_500('RESPONSE_RENDERER_FAILURE');
-		}
-
-		unset($original_body, $success);
+    /**
+     * Prevents caching for PUT/POST/DELETE request methods.
+     */
+    public function after()
+    {
+        parent::after();
 
 		// Prevent caching
 		if (in_array(Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method()), array(
@@ -212,4 +190,47 @@ abstract class RESTful_Controller extends Controller
 		$this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
 		throw new HTTP_Exception_405();
 	}
+
+	/**
+	 * Gets or sets the body of the response
+	 *
+	 * @return  mixed
+	 */
+	public function response($content = NULL)
+	{
+		if ($content === NULL)
+			return $this->response->body();
+
+		$this->response->body($this->_render_response_data($content));
+		return $this;
+	}
+
+	/**
+	 * Converts data given to a string using renderer selected during before().
+     *
+     * @param mixed $data
+     * @throws HTTP_Exception_500
+     */
+	protected function _render_response_data($data)
+	{
+		$success = FALSE;
+
+		// Render response body
+		foreach ($this->_request_accept_types as $type)
+		{
+			$body = call_user_func(RESTful_Response::get_renderer($type), $data);
+
+			if ($body !== FALSE)
+			{
+				$this->response->body($body);
+				$success = TRUE;
+				break;
+			}
+		}
+
+		if ($success === FALSE)
+		{
+			throw new HTTP_Exception_500('RESPONSE_RENDERER_FAILURE');
+		}
+    }
 }

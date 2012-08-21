@@ -10,28 +10,28 @@
 ## Usage
 
 Four methods are already setup in `MODPATH/restful/classes/restful/controller.php`
-    protected $_action_map = array(
-        HTTP_Request::GET    => 'get',
-        HTTP_Request::PUT    => 'update',
-        HTTP_Request::POST   => 'create',
-        HTTP_Request::DELETE => 'delete',
-    );
+> protected $_action_map = array(
+>     HTTP_Request::GET    => 'get',
+>     HTTP_Request::PUT    => 'update',
+>     HTTP_Request::POST   => 'create',
+>     HTTP_Request::DELETE => 'delete',
+> );
 
 In your controller you have to define those actions :
-    public function action_get()
-    {
-        // some actions..
-    }
-    public function action_update()
-    {
-        // some actions..
-    }
-    public function action_create()
-    {
-        // some actions..
-    }
-    public function action_delete()
-    {
-        // some actions..
-    }
+> public function action_get()
+> {
+>     // some actions..
+> }
+> public function action_update()
+> {
+>     // some actions..
+> }
+> public function action_create()
+> {
+>     // some actions..
+> }
+> public function action_delete()
+> {
+>     // some actions..
+> }
 

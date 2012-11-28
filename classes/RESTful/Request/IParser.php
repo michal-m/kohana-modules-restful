@@ -5,7 +5,7 @@
  * @package		RESTful
  * @category	Interfaces
  * @author		Michał Musiał
- * @copyright	(c) 2011 Michał Musiał
+ * @copyright	(c) 2012 Michał Musiał
  */
 interface RESTful_Request_IParser
 {

@@ -6,7 +6,7 @@
  * @package		RESTful
  * @category	Parsers
  * @author		Michał Musiał
- * @copyright	(c) 2011 Michał Musiał
+ * @copyright	(c) 2012 Michał Musiał
  */
 class RESTful_Request_Parser_PLAIN implements RESTful_Request_IParser
 {

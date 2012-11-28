@@ -6,7 +6,7 @@
  * @package		RESTful
  * @category	Renderers
  * @author		Michał Musiał
- * @copyright	(c) 2011 Michał Musiał
+ * @copyright	(c) 2012 Michał Musiał
  */
 class RESTful_Response_Renderer_PRINTR implements RESTful_Response_IRenderer
 {

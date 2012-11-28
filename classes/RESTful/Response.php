@@ -5,7 +5,7 @@
  *
  * @package		RESTful
  * @author		Michał Musiał
- * @copyright	(c) 2011 Michał Musiał
+ * @copyright	(c) 2012 Michał Musiał
  */
 class RESTful_Response
 {

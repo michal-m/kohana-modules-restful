@@ -87,7 +87,7 @@ abstract class RESTful_Controller extends Controller
 		}
 		elseif ( ! method_exists($this, 'action_' . $this->_action_map[$method]))
 		{
-			throw new HTTP_Exception_500('METHOD_MISCONFIGURED');
+			throw HTTP_Exception::factory(500, 'METHOD_MISCONFIGURED');
 		}
 		else
 		{
@@ -102,12 +102,12 @@ abstract class RESTful_Controller extends Controller
 
 			if ($request_content_type === FALSE)
 			{
-				throw new HTTP_Exception_400('NO_CONTENT_TYPE_PROVIDED');
+				throw HTTP_Exception::factory(400, 'NO_CONTENT_TYPE_PROVIDED');
 			}
 
 			if (RESTful_Request::get_parser($request_content_type) === FALSE)
 			{
-				throw new HTTP_Exception_415();
+				throw HTTP_Exception::factory(415);
 			}
 			else
 			{
@@ -129,7 +129,7 @@ abstract class RESTful_Controller extends Controller
 			}
 			else
 			{
-				throw new HTTP_Exception_400('MALFORMED_REQUEST_BODY');
+				throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
 			}
 		}
 
@@ -156,7 +156,8 @@ abstract class RESTful_Controller extends Controller
 		// that is when it uses GET method.
 		if ($method === HTTP_Request::GET AND empty($this->_request_accept_types))
 		{
-			throw new HTTP_Exception_406(
+			throw HTTP_Exception::factory(
+                406,
 				'This service delivers following types: :types.',
 				array(':types' => implode(', ', array_keys($this->_response_types)))
 			);
@@ -189,7 +190,7 @@ abstract class RESTful_Controller extends Controller
 	{
 		// Send the "Method Not Allowed" response
 		$this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
-		throw new HTTP_Exception_405();
+		throw HTTP_Exception::factory(405);
 	}
 
 	/**
@@ -231,7 +232,7 @@ abstract class RESTful_Controller extends Controller
 
 		if ($success === FALSE)
 		{
-			throw new HTTP_Exception_500('RESPONSE_RENDERER_FAILURE');
+			throw HTTP_Exception::factory(500, 'RESPONSE_RENDERER_FAILURE');
 		}
     }
 }

@@ -12,23 +12,16 @@ class RESTful_Request
 	 * @var	array
 	 */
 	protected static $_parsers = array();
-	
+
 	/**
 	 * @param	string $type
 	 * @return	mixed Returns all parsers if $type not specified, a parser callback if found or boolean FALSE otherwise
 	 */
 	public static function get_parser($type = NULL)
 	{
-		if ($type === NULL)
-		{
-			return self::$_parsers;
-		}
-		else
-		{
-			return Arr::get(self::$_parsers, $type, FALSE);
-		}
+        return ($type === NULL) ? self::$_parsers : Arr::get(self::$_parsers, $type, FALSE);
 	}
-	
+
 	/**
 	 * @param	string $type Content MIME type
 	 * @param	callback $callback
@@ -36,15 +29,7 @@ class RESTful_Request
 	 */
 	public static function register_parser($type, $callback)
 	{
-		if (array_key_exists($type, self::$_parsers))
-		{
-			$return = self::$_parsers[$type];
-		}
-		else
-		{
-			$return = TRUE;
-		}
-		
+        $return = (array_key_exists($type, self::$_parsers)) ? self::$_parsers[$type] : TRUE;
 		self::$_parsers[$type] = $callback;
 		return $return;
 	}

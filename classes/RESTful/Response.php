@@ -20,16 +20,9 @@ class RESTful_Response
 	 */
 	public static function get_renderer($type = NULL)
 	{
-		if ($type === NULL)
-		{
-			return self::$_renderers;
-		}
-		else
-		{
-			return Arr::get(self::$_renderers, $type, FALSE);
-		}
+        return ($type === NULL) ? self::$_renderers : Arr::get(self::$_renderers, $type, FALSE);
 	}
-	
+
 	/**
 	 * @param	string $type Content MIME type
 	 * @param	callback $callback
@@ -37,15 +30,7 @@ class RESTful_Response
 	 */
 	public static function register_renderer($type, $callback)
 	{
-		if (array_key_exists($type, self::$_renderers))
-		{
-			$return = self::$_renderers[$type];
-		}
-		else
-		{
-			$return = TRUE;
-		}
-		
+        $return = (array_key_exists($type, self::$_renderers)) ? self::$_renderers[$type] : TRUE;
 		self::$_renderers[$type] = $callback;
 		return $return;
 	}

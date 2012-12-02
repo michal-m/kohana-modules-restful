@@ -74,6 +74,9 @@ abstract class RESTful_Controller extends Controller
 	 */
 	public function before()
 	{
+		
+		parent::before();
+		
 		// Defaulting output content type to text/plain - will hopefully be overriden later
 		$this->response->headers('Content-Type', 'text/plain');
 

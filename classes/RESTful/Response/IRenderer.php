@@ -3,15 +3,15 @@
 /**
  * RESTful Response Renderer Interface
  *
- * @package		RESTful
- * @category	Interfaces
- * @author		Michał Musiał
- * @copyright	(c) 2012 Michał Musiał
+ * @package     RESTful
+ * @category    Interfaces
+ * @author      Michał Musiał
+ * @copyright   (c) 2012 Michał Musiał
  */
 interface RESTful_Response_IRenderer
 {
-	/**
-	 * @param mixed $data
-	 */
-	static public function render($data);
+    /**
+     * @param mixed $data
+     */
+    static public function render($data);
 }

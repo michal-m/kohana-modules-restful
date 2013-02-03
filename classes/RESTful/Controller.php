@@ -29,7 +29,6 @@
  * @copyright   (c) 2012 Michał Musiał
  *
  * @todo        Caching responses
- * @todo        Fallback to $_POST['_method'] if detected
  * @todo        Authentication (Authorization: ... header)
  * @todo        Investigate HEAD/OPTIONS methods
  * @todo        Investigate error messages being displayed even when they shouldn't

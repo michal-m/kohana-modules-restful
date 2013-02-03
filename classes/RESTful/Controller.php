@@ -78,7 +78,8 @@ abstract class RESTful_Controller extends Controller
 		// Defaulting output content type to text/plain - will hopefully be overriden later
 		$this->response->headers('Content-Type', 'text/plain');
 
-		$method = Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method());
+        $method_override = $this->request->headers('X-HTTP-Method-Override');
+		$method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
 
 		// Checking requested method
 		if ( ! isset($this->_action_map[$method]))
@@ -98,9 +99,9 @@ abstract class RESTful_Controller extends Controller
 		// shouldn't have any content.
 		if (in_array($method, array(HTTP_Request::POST, HTTP_Request::PUT)))
 		{
-			$request_content_type = Arr::get($_SERVER, 'CONTENT_TYPE', FALSE);
+			$request_content_type = $this->request->headers('Content-Type');
 
-			if ($request_content_type === FALSE)
+			if (empty($request_content_type))
 			{
 				throw HTTP_Exception::factory(400, 'NO_CONTENT_TYPE_PROVIDED');
 			}
@@ -173,8 +174,11 @@ abstract class RESTful_Controller extends Controller
     {
         parent::after();
 
+        $method_override = $this->request->headers('X-HTTP-Method-Override');
+		$method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
+
 		// Prevent caching
-		if (in_array(Arr::get($_SERVER, 'HTTP_X_HTTP_METHOD_OVERRIDE', $this->request->method()), array(
+		if (in_array($method, array(
 			HTTP_Request::PUT,
 			HTTP_Request::POST,
 			HTTP_Request::DELETE)))

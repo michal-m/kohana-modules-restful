@@ -75,6 +75,8 @@ abstract class RESTful_Controller extends Controller
 	 */
 	public function before()
 	{
+        parent::before();
+
 		// Defaulting output content type to text/plain - will hopefully be overriden later
 		$this->response->headers('Content-Type', 'text/plain');
 
@@ -163,8 +165,6 @@ abstract class RESTful_Controller extends Controller
 				array(':types' => implode(', ', array_keys($this->_response_types)))
 			);
 		}
-
-		return TRUE;
 	}
 
     /**
@@ -172,8 +172,6 @@ abstract class RESTful_Controller extends Controller
      */
     public function after()
     {
-        parent::after();
-
         $method_override = $this->request->headers('X-HTTP-Method-Override');
 		$method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
 
@@ -185,6 +183,8 @@ abstract class RESTful_Controller extends Controller
 		{
 			$this->response->headers('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate');
 		}
+
+        parent::after();
 	}
 
 	/**

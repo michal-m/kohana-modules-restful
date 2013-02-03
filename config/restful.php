@@ -5,7 +5,7 @@
  */
 return array
 (
-    'defaults'	=> array(
-		'content-type'			=> 'application/json',
-	),
+    'defaults'    => array(
+        'content-type'          => 'application/json',
+    ),
 );

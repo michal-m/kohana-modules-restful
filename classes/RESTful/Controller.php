@@ -46,12 +46,11 @@ abstract class RESTful_Controller extends Controller
     );
 
     /**
-     * Array of all acceptable content-types provided with the request's Accept
-     * header
+     * Preferred response mime-type based on provided Accept header in the request.
      *
-     * @var     array
+     * @var mixed String containing preferred Accept mime type or boolean FALSE if none matched.
      */
-    private $_request_accept_types = array();
+    protected $_preferred_response_content_type;
 
     /**
      * Controller Constructor
@@ -135,28 +134,14 @@ abstract class RESTful_Controller extends Controller
             }
         }
 
+        // Determining response content type
+        $registered_response_content_types = array_keys(RESTful_Response::get_renderer());
+
         // Checking Accept mime-types
-        $requested_mime_types = Request::accept_type();
-        $config_defaults = Kohana::$config->load('restful.defaults');
+        $this->_preferred_response_content_type = $this->request->headers()->preferred_accept($registered_response_content_types);
 
-        if (count($requested_mime_types) == 0 OR (count($requested_mime_types) == 1 AND isset($requested_mime_types['*/*'])))
-        {
-            $this->_request_accept_types[] = $config_defaults['content-type'];
-        }
-        else
-        {
-            foreach ($requested_mime_types as $type => $q)
-            {
-                if (RESTful_Response::get_renderer($type) !== FALSE)
-                {
-                    $this->_request_accept_types[] = $type;
-                }
-            }
-        }
-
-        // Script should fail only if requester expects any content returned,
-        // that is when it uses GET method.
-        if ($method === HTTP_Request::GET AND empty($this->_request_accept_types))
+        // Fail in no preferred response type could be determined.
+        if ($this->_preferred_response_content_type === FALSE)
         {
             throw HTTP_Exception::factory(
                 406,
@@ -221,19 +206,13 @@ abstract class RESTful_Controller extends Controller
         $success = FALSE;
 
         // Render response body
-        foreach ($this->_request_accept_types as $type)
+        $body = call_user_func(RESTful_Response::get_renderer($this->_preferred_response_content_type), $data);
+
+        if ($body !== FALSE)
         {
-            $body = call_user_func(RESTful_Response::get_renderer($type), $data);
-
-            if ($body !== FALSE)
-            {
-                $this->response->body($body);
-                $success = TRUE;
-                break;
-            }
+            $this->response->body($body);
         }
-
-        if ($success === FALSE)
+        else
         {
             throw HTTP_Exception::factory(500, 'RESPONSE_RENDERER_FAILURE');
         }

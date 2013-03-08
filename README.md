@@ -2,10 +2,9 @@
 ## Installation
 
 1. Copy and paste files and folders to MODPATH/restful
-2. Copy MODPATH/restful/config/restful.php to your APPPATH/config folder
-3. Add this entry under `Kohana::modules` array in APPPATH/bootstrap.php : `'restful' => MODPATH.'restful', // RESTful interface`
-4. Create your a controller and extend `RESTful_Controller` (eg: `class Controller_YOURNAME extends RESTful_Controller`).
-5. Enjoy!
+2. Add this entry under `Kohana::modules` array in APPPATH/bootstrap.php : `'restful' => MODPATH.'restful', // RESTful interface`
+3. Create your a controller and extend `RESTful_Controller` (eg: `class Controller_YOURNAME extends RESTful_Controller`).
+4. Enjoy!
 
 ## Usage
 

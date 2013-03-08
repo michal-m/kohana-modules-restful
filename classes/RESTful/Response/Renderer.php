@@ -46,7 +46,7 @@ class RESTful_Response_Renderer {
      */
     static public function application_php_serialized_array($data)
     {
-        return serialize((array) $data);
+        return serialize( (array) $data);
     }
 
     /**
@@ -57,7 +57,7 @@ class RESTful_Response_Renderer {
      */
     static public function application_php_serialized_object($data)
     {
-        return serialize((object) $data);
+        return serialize( (object) $data);
     }
 
     /**

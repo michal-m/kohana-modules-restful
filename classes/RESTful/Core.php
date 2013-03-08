@@ -2,10 +2,10 @@
 /**
  * @package     RESTful
  * @author      Michał Musiał
- * @copyright   (c) 2012 Michał Musiał
+ * @copyright   (c) 2013 Michał Musiał
  */
-class RESTful_Core
-{
+class RESTful_Core {
+
     /**
      * PHP error handler, converts all errors into ErrorExceptions. This handler
      * doesn't respect error_reporting settings.

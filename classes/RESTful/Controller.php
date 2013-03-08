@@ -106,7 +106,7 @@ abstract class RESTful_Controller extends Controller
                 throw HTTP_Exception::factory(400, 'NO_CONTENT_TYPE_PROVIDED');
             }
 
-            if (RESTful_Request::get_parser($request_content_type) === FALSE)
+            if (RESTful_Request::parser($request_content_type) === FALSE)
             {
                 throw HTTP_Exception::factory(415);
             }
@@ -116,7 +116,7 @@ abstract class RESTful_Controller extends Controller
 
                 if (strlen($request_body) > 0)
                 {
-                    $request_data = call_user_func(RESTful_Request::get_parser($request_content_type), $request_body);
+                    $request_data = call_user_func(RESTful_Request::parser($request_content_type), $request_body);
                 }
                 else
                 {
@@ -135,7 +135,7 @@ abstract class RESTful_Controller extends Controller
         }
 
         // Determining response content type
-        $registered_response_content_types = array_keys(RESTful_Response::get_renderer());
+        $registered_response_content_types = array_keys(RESTful_Response::renderer());
 
         // Checking Accept mime-types
         $this->_preferred_response_content_type = $this->request->headers()->preferred_accept($registered_response_content_types);
@@ -207,7 +207,7 @@ abstract class RESTful_Controller extends Controller
         $success = FALSE;
 
         // Render response body
-        $body = call_user_func(RESTful_Response::get_renderer($this->_preferred_response_content_type), $data);
+        $body = call_user_func(RESTful_Response::renderer($this->_preferred_response_content_type), $data);
 
         if ($body !== FALSE)
         {

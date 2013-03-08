@@ -1,9 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-RESTful_Request::register_parser('application/json',                        'RESTful_Request_Parser_JSON::parse');
-RESTful_Request::register_parser('application/php-serialized',              'RESTful_Request_Parser_PHP::parse');
-RESTful_Request::register_parser('application/x-www-form-urlencoded',       'RESTful_Request_Parser_URLENC::parse');
-RESTful_Request::register_parser('text/plain',                              'RESTful_Request_Parser_PLAIN::parse');
+RESTful_Request::parser('application/json',                     'RESTful_Request_Parser_JSON::parse');
+RESTful_Request::parser('application/php-serialized',           'RESTful_Request_Parser_PHP::parse');
+RESTful_Request::parser('application/x-www-form-urlencoded',    'RESTful_Request_Parser_URLENC::parse');
+RESTful_Request::parser('text/plain',                           'RESTful_Request_Parser_PLAIN::parse');
 
 RESTful_Response::renderer('application/json',                     'RESTful_Response_Renderer_JSON::render');
 RESTful_Response::renderer('application/php-serialized',           'RESTful_Response_Renderer_PHP::render');

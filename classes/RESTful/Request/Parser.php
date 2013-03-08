@@ -18,7 +18,11 @@ class RESTful_Request_Parser {
     static public function application_json($request_body)
     {
         $decoded = json_decode($request_body);
-        return (json_last_error() === JSON_ERROR_NONE) ? $decoded : FALSE;
+
+        if (json_last_error() !== JSON_ERROR_NONE)
+            throw HTTP_Exception::factory(500, 'PARSE_ERROR_JSON_DECODE');
+
+        return $decoded;
     }
 
     /**
@@ -29,7 +33,16 @@ class RESTful_Request_Parser {
      */
     static public function application_php_serialized($request_body)
     {
-        return @unserialize($request_body);
+        try
+        {
+            $data = @unserialize($request_body);
+        }
+        catch (Exception $e)
+        {
+            throw HTTP_Exception::factory(500, 'PARSE_ERROR_UNSERIALIZE');
+        }
+
+        return $data;
     }
 
     /**

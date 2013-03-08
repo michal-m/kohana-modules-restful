@@ -160,12 +160,13 @@ abstract class RESTful_Controller extends Controller
         $method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
 
         // Prevent caching
-        if (in_array($method, array(
-            HTTP_Request::PUT,
-            HTTP_Request::POST,
-            HTTP_Request::DELETE)))
+        if ($method == HTTP_Request::PUT OR
+            $method == HTTP_Request::DELETE OR
+            ($method == HTTP_Request::POST AND $this->response->headers('Cache-Control') === NULL AND $this->response->headers('Expires') === NULL))
         {
             $this->response->headers('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate');
+            $this->response->headers('Expires', -1);
+            $this->response->headers('Pragma', 'no-cache');
         }
 
         parent::after();

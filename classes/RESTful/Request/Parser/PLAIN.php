@@ -1,15 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
  * PLAIN Request Data Parser class for text/plain mime-type.
  *
  * @package     RESTful
  * @category    Parsers
  * @author      Michał Musiał
- * @copyright   (c) 2012 Michał Musiał
+ * @copyright   (c) 2013 Michał Musiał
  */
-class RESTful_Request_Parser_PLAIN implements RESTful_Request_IParser
-{
+class RESTful_Request_Parser_PLAIN {
+
     /**
      * @param   string $data
      * @return  string

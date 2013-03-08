@@ -1,15 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
  * JSON Data Response Renderer class for application/json mime-type.
  *
  * @package     RESTful
  * @category    Renderers
  * @author      Michał Musiał
- * @copyright   (c) 2012 Michał Musiał
+ * @copyright   (c) 2013 Michał Musiał
  */
-class RESTful_Response_Renderer_JSON implements RESTful_Response_IRenderer
-{
+class RESTful_Response_Renderer_JSON {
+
     /**
      * @param   mixed $input
      * @return  string

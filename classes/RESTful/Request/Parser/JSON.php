@@ -1,15 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
  * JSON Request Data Parser class for application/json mime-type.
  *
  * @package     RESTful
  * @category    Parsers
  * @author      Michał Musiał
- * @copyright   (c) 2012 Michał Musiał
+ * @copyright   (c) 2013 Michał Musiał
  */
-class RESTful_Request_Parser_JSON implements RESTful_Request_IParser
-{
+class RESTful_Request_Parser_JSON {
+
     /**
      * @param   string  $data
      * @return  mixed

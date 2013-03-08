@@ -1,15 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
  * PRINTR Data Response Renderer class for text/php-printr mime-type.
  *
  * @package     RESTful
  * @category    Renderers
  * @author      Michał Musiał
- * @copyright   (c) 2012 Michał Musiał
+ * @copyright   (c) 2013 Michał Musiał
  */
-class RESTful_Response_Renderer_PRINTR implements RESTful_Response_IRenderer
-{
+class RESTful_Response_Renderer_PRINTR {
+
     /**
      * @param   mixed $input
      * @return  string

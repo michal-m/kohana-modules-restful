@@ -1,5 +1,4 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
  * Abstract Controller class for RESTful controller mapping. Supports GET, PUT,
  * POST, and DELETE. By default, these methods will be mapped to these actions:
@@ -26,15 +25,15 @@
  * @package     RESTful
  * @category    Controllers
  * @author      Michał Musiał
- * @copyright   (c) 2012 Michał Musiał
+ * @copyright   (c) 2013 Michał Musiał
  *
  * @todo        Caching responses
  * @todo        Authentication (Authorization: ... header)
  * @todo        Investigate HEAD/OPTIONS methods
  * @todo        Investigate error messages being displayed even when they shouldn't
  */
-abstract class RESTful_Controller extends Controller
-{
+abstract class RESTful_Controller extends Controller {
+
     /**
      * @var array Array of possible actions.
      */

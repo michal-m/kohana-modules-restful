@@ -12,7 +12,7 @@ class RESTful_Response_Renderer {
     /**
      * Renderer for application/json mime type.
      *
-     * @param   mixed $input
+     * @param   mixed   $input
      * @return  string
      */
     static public function application_json($data)
@@ -20,9 +20,7 @@ class RESTful_Response_Renderer {
         $json = json_encode($data);
 
         if (json_last_error() !== JSON_ERROR_NONE)
-        {
-            throw HTTP_Exception::factory(500);
-        }
+            throw HTTP_Exception::factory(500, 'RENDERER_ERROR_JSON_ENCODE');
 
         return $json;
     }
@@ -30,7 +28,7 @@ class RESTful_Response_Renderer {
     /**
      * Renderer for application/php-serialized mime type.
      *
-     * @param   mixed $input
+     * @param   mixed   $input
      * @return  string
      */
     static public function application_php_serialized($data)
@@ -41,12 +39,12 @@ class RESTful_Response_Renderer {
     /**
      * Renderer for application/php-serialized-array mime type.
      *
-     * @param   mixed $input
+     * @param   mixed   $input
      * @return  string
      */
     static public function application_php_serialized_array($data)
     {
-        return serialize((array) $data);
+        return serialize( (array) $data);
     }
 
     /**
@@ -57,7 +55,7 @@ class RESTful_Response_Renderer {
      */
     static public function application_php_serialized_object($data)
     {
-        return serialize((object) $data);
+        return serialize( (object) $data);
     }
 
     /**

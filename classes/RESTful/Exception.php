@@ -1,15 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
  * Exception class for RESTful API implementation
  *
  * @package     RESTful
  * @category    Exceptions
  * @author      Michał Musiał
- * @copyright   (c) 2012 Michał Musiał
+ * @copyright   (c) 2013 Michał Musiał
  */
-class RESTful_Exception extends Kohana_Exception
-{
+class RESTful_Exception extends Kohana_Exception {
+
     /**
      * Inline exception handler, displays the error message, source of the
      * exception, and the stack trace of the error.

@@ -77,8 +77,12 @@ abstract class RESTful_Controller extends Controller {
         // Defaulting output content type to text/plain - will hopefully be overriden later
         $this->response->headers('Content-Type', 'text/plain');
 
-        $method_override = $this->request->headers('X-HTTP-Method-Override');
-        $method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
+        if ($method_override = $this->request->headers('X-HTTP-Method-Override'))
+        {
+            $this->request->method($method_override);
+        }
+
+        $method = strtoupper($this->request->method());
 
         // Checking requested method
         if ( ! isset($this->_action_map[$method]))
@@ -155,8 +159,7 @@ abstract class RESTful_Controller extends Controller {
      */
     public function after()
     {
-        $method_override = $this->request->headers('X-HTTP-Method-Override');
-        $method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
+        $method = strtoupper($this->request->method());
 
         // Prevent caching
         if ($method == HTTP_Request::PUT OR

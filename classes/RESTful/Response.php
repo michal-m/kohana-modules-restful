@@ -9,9 +9,54 @@
 class RESTful_Response {
 
     /**
+     * @var string
+     */
+    protected static $_default_type;
+
+
+     /**
      * @var array
      */
     protected static $_renderers = array();
+
+    /**
+     * Gets or sets default renderer type.
+     *
+     * @param   string  $type
+     * @return  string
+     */
+    public static function default_type($type = NULL)
+    {
+        if ($type === NULL)
+        {
+            return self::$_default_type;
+        }
+
+        self::$_default_type = $type;
+    }
+
+    /**
+     * Renders and returns
+     *
+     * @param   mixed   $data
+     * @param   string  $type
+     * @return  string  Returns rendered response body.
+     * @throws  HTTP_Exception_500
+     */
+    public static function render($data, $type = NULL)
+    {
+        if ($type === NULL)
+        {
+            $type = self::$_default_type;
+        }
+
+        $response_body = call_user_func(self::renderer($type), $data);
+
+        if ($response_body === FALSE)
+            throw HTTP_Exception::factory(500, 'RESPONSE_RENDERER_ERROR');
+
+        return $response_body;
+    }
 
     /**
      * Getter/setter for Response renderes.

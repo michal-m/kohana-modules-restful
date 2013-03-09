@@ -18,9 +18,9 @@
  * Additional methods can be supported by adding the method and action to
  * the `$_action_map` property.
  *
- * [!!] Using this class within a website will require heavy modification,
- * due to most web browsers only supporting the GET and POST methods.
- * Generally, this class should only be used for web services and APIs.
+ * [!!] Using this class within a website is not recommended, due to most web
+ * browsers only supporting the GET and POST methods. Generally, this class
+ * should only be used for web services and APIs.
  *
  * @package     RESTful
  * @category    Controllers

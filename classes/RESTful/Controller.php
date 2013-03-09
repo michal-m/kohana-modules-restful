@@ -26,11 +26,6 @@
  * @category    Controllers
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
- *
- * @todo        Caching responses
- * @todo        Authentication (Authorization: ... header)
- * @todo        Investigate HEAD/OPTIONS methods
- * @todo        Investigate error messages being displayed even when they shouldn't
  */
 abstract class RESTful_Controller extends Controller {
 

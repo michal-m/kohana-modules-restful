@@ -14,6 +14,24 @@ class RESTful_Request {
     protected static $_parsers = array();
 
     /**
+     * Parses Request body
+     *
+     * @param   string  $request_body
+     * @param   string  $type
+     * @return  mixed   Returns decoded request body
+     * @throws  HTTP_Exception_500
+     */
+    public static function parse($request_body, $type)
+    {
+        $request_params = call_user_func(self::parser($type), $request_body);
+
+        if ($request_params === FALSE AND ! empty($request_body))
+            throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
+
+        return $request_params;
+    }
+
+    /**
      * Getter/setter for Request parsers.
      *
      * @param   string      $type       Content MIME type

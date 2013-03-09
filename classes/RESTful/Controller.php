@@ -45,11 +45,11 @@ abstract class RESTful_Controller extends Controller {
     );
 
     /**
-     * Preferred response mime-type based on provided Accept header in the request.
+     * Contains parsed request data.
      *
-     * @var mixed String containing preferred Accept mime type or boolean FALSE if none matched.
+     * @var mixed
      */
-    protected $_preferred_response_content_type;
+    protected $_request_data;
 
     /**
      * Controller Constructor
@@ -77,8 +77,12 @@ abstract class RESTful_Controller extends Controller {
         // Defaulting output content type to text/plain - will hopefully be overriden later
         $this->response->headers('Content-Type', 'text/plain');
 
-        $method_override = $this->request->headers('X-HTTP-Method-Override');
-        $method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
+        if ($method_override = $this->request->headers('X-HTTP-Method-Override'))
+        {
+            $this->request->method($method_override);
+        }
+
+        $method = strtoupper($this->request->method());
 
         // Checking requested method
         if ( ! isset($this->_action_map[$method]))
@@ -109,45 +113,26 @@ abstract class RESTful_Controller extends Controller {
             {
                 throw HTTP_Exception::factory(415);
             }
-            else
-            {
-                $request_body = $this->request->body();
 
-                if (strlen($request_body) > 0)
-                {
-                    $request_data = call_user_func(RESTful_Request::parser($request_content_type), $request_body);
-                }
-                else
-                {
-                    $request_data = $_POST;
-                }
-            }
-
-            if ($request_data !== FALSE AND ! empty($request_data))
-            {
-                $this->request->body($request_data);
-            }
-            else
-            {
-                throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
-            }
+            $request_body = $this->request->body();
+            $this->_request_data = (strlen($request_body) > 0) ? RESTful_Request::parse($request_body, $request_content_type): NULL;
         }
 
         // Determining response content type
         $registered_response_content_types = array_keys(RESTful_Response::renderer());
 
         // Checking Accept mime-types
-        $this->_preferred_response_content_type = $this->request->headers()->preferred_accept($registered_response_content_types);
+        $preferred_response_content_type = $this->request->headers()->preferred_accept($registered_response_content_types);
 
         // Fail in no preferred response type could be determined.
-        if ($this->_preferred_response_content_type === FALSE)
-        {
+        if ($preferred_response_content_type === FALSE)
             throw HTTP_Exception::factory(
                 406,
                 'This service delivers following types: :types.',
                 array(':types' => implode(', ', array_keys($this->_response_types)))
             );
-        }
+
+        RESTful_Response::default_type($preferred_response_content_type);
     }
 
     /**
@@ -155,8 +140,7 @@ abstract class RESTful_Controller extends Controller {
      */
     public function after()
     {
-        $method_override = $this->request->headers('X-HTTP-Method-Override');
-        $method = strtoupper((empty($method_override)) ? $this->request->method() : $method_override);
+        $method = strtoupper($this->request->method());
 
         // Prevent caching
         if ($method == HTTP_Request::PUT OR
@@ -179,42 +163,5 @@ abstract class RESTful_Controller extends Controller {
         // Send the "Method Not Allowed" response
         $this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
         throw HTTP_Exception::factory(405);
-    }
-
-    /**
-     * Gets or sets the body of the response
-     *
-     * @return  mixed
-     */
-    public function response($content = NULL)
-    {
-        if ($content === NULL)
-            return $this->response->body();
-
-        $this->response->body($this->_render_response_data($content));
-        return $this;
-    }
-
-    /**
-     * Converts data given to a string using renderer selected during before().
-     *
-     * @param   mixed   $data
-     * @throws  HTTP_Exception_500
-     */
-    protected function _render_response_data($data)
-    {
-        $success = FALSE;
-
-        // Render response body
-        $body = call_user_func(RESTful_Response::renderer($this->_preferred_response_content_type), $data);
-
-        if ($body !== FALSE)
-        {
-            $this->response->body($body);
-        }
-        else
-        {
-            throw HTTP_Exception::factory(500, 'RESPONSE_RENDERER_FAILURE');
-        }
     }
 }

@@ -45,6 +45,13 @@ abstract class RESTful_Controller extends Controller {
     );
 
     /**
+     * Contains parsed request data.
+     *
+     * @var mixed
+     */
+    protected $_request_data;
+
+    /**
      * Controller Constructor
      *
      * @param   Request     $request
@@ -106,28 +113,9 @@ abstract class RESTful_Controller extends Controller {
             {
                 throw HTTP_Exception::factory(415);
             }
-            else
-            {
-                $request_body = $this->request->body();
 
-                if (strlen($request_body) > 0)
-                {
-                    $request_data = call_user_func(RESTful_Request::parser($request_content_type), $request_body);
-                }
-                else
-                {
-                    $request_data = $_POST;
-                }
-            }
-
-            if ($request_data !== FALSE AND ! empty($request_data))
-            {
-                $this->request->body($request_data);
-            }
-            else
-            {
-                throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
-            }
+            $request_body = $this->request->body();
+            $this->_request_data = (strlen($request_body) > 0) ? RESTful_Request::parse($request_body, $request_content_type): NULL;
         }
 
         // Determining response content type

@@ -118,7 +118,17 @@ abstract class RESTful_HTTP_Exception extends HTTP_Exception {
             $response = Response::factory();
             $response->status(500);
             $response->headers('Content-Type', 'text/plain');
-            $response->body(Kohana_Exception::text($e));
+
+            if (Kohana::$environment === Kohana::DEVELOPMENT)
+            {
+                $response->body(Kohana_Exception::text($e));
+            }
+            else
+            {
+                // Don't return any response body for non-DEV environments
+                // Something goes wrong - let's keep it to ourselves
+                $response->body('');
+            }
         }
 
         return $response;

@@ -28,6 +28,15 @@ abstract class RESTful_HTTP_Exception extends HTTP_Exception {
             $trace   = $e->getTrace();
 
             /**
+             * Throw simple response if default response content-type was not
+             * yet determined.
+             */
+            if ( ! RESTful_Response::default_type())
+            {
+                throw RESTful_HTTP_Exception::factory(500, $message);
+            }
+
+            /**
              * HTTP_Exceptions are constructed in the HTTP_Exception::factory()
              * method. We need to remove that entry from the trace and overwrite
              * the variables from above.

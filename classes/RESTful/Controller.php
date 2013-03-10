@@ -1,22 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * Abstract Controller class for RESTful controller mapping. Supports GET, PUT,
- * POST, and DELETE. By default, these methods will be mapped to these actions:
- *
- * GET
- * :  Mapped to the "get" action, lists all objects
- *
- * POST
- * :  Mapped to the "create" action, creates a new object
- *
- * PUT
- * :  Mapped to the "update" action, update an existing object
- *
- * DELETE
- * :  Mapped to the "delete" action, delete an existing object
- *
- * Additional methods can be supported by adding the method and action to
- * the `$_action_map` property.
+ * Abstract Controller class for RESTful controller mapping.
  *
  * [!!] Using this class within a website is not recommended, due to most web
  * browsers only supporting the GET and POST methods. Generally, this class
@@ -32,7 +16,7 @@ abstract class RESTful_Controller extends Controller {
     /**
      * @var array Array of possible actions.
      */
-    protected $_action_map = array(
+    public static $action_map = array(
         HTTP_Request::GET    => 'get',
         HTTP_Request::PUT    => 'update',
         HTTP_Request::POST   => 'create',
@@ -47,6 +31,46 @@ abstract class RESTful_Controller extends Controller {
     protected $_request_data;
 
     /**
+     * Executes the given action and calls the [Controller::before] and [Controller::after] methods.
+     *
+     * Can also be used to catch exceptions from actions in a single place.
+     *
+     * 1. Before the controller action is called, the [Controller::before] method
+     * will be called.
+     * 2. Next the controller action will be called.
+     * 3. After the controller action is called, the [Controller::after] method
+     * will be called.
+     *
+     * @throws  HTTP_Exception_405
+     * @return  Response
+     */
+    public function execute()
+    {
+        // Execute the "before action" method
+        $this->before();
+
+        // Determine the action to use
+        $action = 'action_'.$this->request->action();
+
+        // If the action doesn't exist, it's a 405 Method Not Allowed
+        if ( ! method_exists($this, $action))
+        {
+            throw HTTP_Exception::factory(405)
+                ->headers('Allow', implode(', ', array_keys($this->_action_map)))
+                ->request($this->request);
+        }
+
+        // Execute the action itself
+        $this->{$action}();
+
+        // Execute the "after action" method
+        $this->after();
+
+        // Return the response
+        return $this->response;
+    }
+
+    /**
      * Preflight checks.
      */
     public function before()
@@ -56,41 +80,32 @@ abstract class RESTful_Controller extends Controller {
         // Defaulting output content type to text/plain - will hopefully be overriden later
         $this->response->headers('Content-Type', 'text/plain');
 
-        if ($method_override = $this->request->headers('X-HTTP-Method-Override'))
-        {
-            $this->request->method($method_override);
-        }
+        // Override default error view and content type
+        HTTP_Exception::$error_view = 'restful/error';
+        HTTP_Exception::$error_view_content_type = 'text/plain';
 
         $method = strtoupper($this->request->method());
-
-        // Checking requested method
-        if ( ! isset($this->_action_map[$method]))
-        {
-            return $this->request->action('invalid');
-        }
-        elseif ( ! method_exists($this, 'action_' . $this->_action_map[$method]))
-        {
-            throw RESTful_HTTP_Exception::factory(500, 'METHOD_MISCONFIGURED');
-        }
-        else
-        {
-            $this->request->action($this->_action_map[$method]);
-        }
 
         // Checking Content-Type. Considering only POST and PUT methods as other
         // shouldn't have any content.
         if (in_array($method, array(HTTP_Request::POST, HTTP_Request::PUT)))
         {
-            $request_content_type = $this->request->headers('Content-Type');
+            $request_content_type_full = $this->request->headers('Content-Type');
 
-            if (empty($request_content_type))
-            {
-                throw RESTful_HTTP_Exception::factory(400, 'NO_CONTENT_TYPE_PROVIDED');
-            }
+            if ($request_content_type_full === NULL)
+                throw HTTP_Exception::factory(400, 'MISSING_REQUEST_CONTENT_TYPE');
+
+            $type_found = preg_match('|^([^/]+/[^;$]+)(;\s*charset=(.*))?|', $request_content_type_full, $matches);
+
+            if ( ! $type_found)
+                throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_CONTENT_TYPE');
+
+            $request_content_type = $matches[1];
+            // $request_content_charset = $matches[3];
 
             if (RESTful_Request::parser($request_content_type) === FALSE)
             {
-                throw RESTful_HTTP_Exception::factory(415);
+                throw HTTP_Exception::factory(415);
             }
 
             $request_body = $this->request->body();
@@ -105,13 +120,14 @@ abstract class RESTful_Controller extends Controller {
 
         // Fail in no preferred response type could be determined.
         if ($preferred_response_content_type === FALSE)
-            throw RESTful_HTTP_Exception::factory(
+            throw HTTP_Exception::factory(
                 406,
                 'This service delivers following types: :types.',
                 array(':types' => implode(', ', array_keys($this->_response_types)))
             );
 
         RESTful_Response::default_type($preferred_response_content_type);
+        HTTP_Exception::$error_view_content_type = $preferred_response_content_type;
     }
 
     /**
@@ -132,15 +148,5 @@ abstract class RESTful_Controller extends Controller {
         }
 
         parent::after();
-    }
-
-    /**
-     * Throws a RESTful_HTTP_Exception_405 as a response with a list of allowed actions.
-     */
-    public function action_invalid()
-    {
-        // Send the "Method Not Allowed" response
-        $this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
-        throw RESTful_HTTP_Exception::factory(405);
     }
 }

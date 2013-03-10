@@ -56,6 +56,7 @@ abstract class RESTful_Controller extends Controller {
         // Defaulting output content type to text/plain - will hopefully be overriden later
         $this->response->headers('Content-Type', 'text/plain');
 
+        // Override method if appropriate header given
         if ($method_override = $this->request->headers('X-HTTP-Method-Override'))
         {
             $this->request->method($method_override);

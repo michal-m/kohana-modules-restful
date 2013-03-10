@@ -84,6 +84,9 @@ abstract class RESTful_HTTP_Exception extends HTTP_Exception {
                 $trace = array_slice($trace, 0, 2);
             }
 
+            // Prepare the response object.
+            $response = Response::factory();
+
             // Set the response status
             $response->status(($e instanceof HTTP_Exception) ? $e->getCode() : 500);
 

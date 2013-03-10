@@ -94,20 +94,28 @@ abstract class RESTful_HTTP_Exception extends HTTP_Exception {
                 $trace = array_slice($trace, 0, 2);
             }
 
-            // Instantiate the error view.
-            $view = View::factory(Kohana_Exception::$error_view, get_defined_vars());
-
-            // Prepare the response object.
-            $response = Response::factory();
-
             // Set the response status
             $response->status(($e instanceof HTTP_Exception) ? $e->getCode() : 500);
 
             // Set the response headers
-            $response->headers('Content-Type', Kohana_Exception::$error_view_content_type.'; charset='.Kohana::$charset);
+            $response->headers('Content-Type', RESTful_Response::default_type());
 
             // Set the response body
-            $response->body($view->render());
+            $exception_data = array(
+                'code'      => $response->status(),
+                'message'   => $message,
+            );
+
+            if (Kohana::$environment === Kohana::DEVELOPMENT)
+            {
+                $exception_data['debug'] = array(
+                    'file'  => $class,
+                    'line'  => $line,
+                    'trace' => $trace,
+                );
+            }
+
+            $response->body(RESTful_Response::render($exception_data));
         }
         catch (Exception $e)
         {

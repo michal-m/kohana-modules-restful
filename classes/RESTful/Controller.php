@@ -70,7 +70,7 @@ abstract class RESTful_Controller extends Controller {
         }
         elseif ( ! method_exists($this, 'action_' . $this->_action_map[$method]))
         {
-            throw RESTful_HTTP_Exception::factory(500, 'METHOD_NOT_CONFIGURED');
+            throw HTTP_Exception::factory(500, 'METHOD_NOT_CONFIGURED');
         }
         else
         {
@@ -84,14 +84,14 @@ abstract class RESTful_Controller extends Controller {
             $type_found = preg_match('|^([^/]+/[^;$]+)(;\s*charset=(.*))?|', $this->request->headers('Content-Type'), $matches);
 
             if ( ! $type_found)
-                throw RESTful_HTTP_Exception(400, 'MALFORMED_REQUEST_CONTENT_TYPE');
+                throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_CONTENT_TYPE');
 
             $request_content_type = $matches[1];
             //$request_content_charset = $matches[3];
 
             if (RESTful_Request::parser($request_content_type) === FALSE)
             {
-                throw RESTful_HTTP_Exception::factory(415);
+                throw HTTP_Exception::factory(415);
             }
 
             $request_body = $this->request->body();
@@ -106,7 +106,7 @@ abstract class RESTful_Controller extends Controller {
 
         // Fail in no preferred response type could be determined.
         if ($preferred_response_content_type === FALSE)
-            throw RESTful_HTTP_Exception::factory(
+            throw HTTP_Exception::factory(
                 406,
                 'This service delivers following types: :types.',
                 array(':types' => implode(', ', array_keys($this->_response_types)))

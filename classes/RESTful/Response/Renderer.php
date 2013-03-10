@@ -20,7 +20,7 @@ class RESTful_Response_Renderer {
         $json = json_encode($data);
 
         if (json_last_error() !== JSON_ERROR_NONE)
-            throw RESTful_HTTP_Exception::factory(500, 'RENDERER_ERROR_JSON_ENCODE');
+            throw HTTP_Exception::factory(500, 'RENDERER_ERROR_JSON_ENCODE');
 
         return $json;
     }

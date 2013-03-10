@@ -26,7 +26,7 @@ class RESTful_Request {
         $request_params = call_user_func(self::parser($type), $request_body);
 
         if ($request_params === FALSE AND ! empty($request_body))
-            throw RESTful_HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
+            throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
 
         return $request_params;
     }

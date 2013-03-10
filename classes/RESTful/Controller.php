@@ -47,22 +47,6 @@ abstract class RESTful_Controller extends Controller {
     protected $_request_data;
 
     /**
-     * Controller Constructor
-     *
-     * @param   Request     $request
-     * @param   Response    $response
-     */
-    public function __construct(Request $request, Response $response)
-    {
-        // Enable RESTful internal error handling
-        set_exception_handler(array('RESTful_Exception', 'handler'));
-        // Enable Kohana error handling, converts all PHP errors to exceptions.
-        set_error_handler(array('RESTful', 'error_handler'));
-
-        parent::__construct($request, $response);
-    }
-
-    /**
      * Preflight checks.
      */
     public function before()

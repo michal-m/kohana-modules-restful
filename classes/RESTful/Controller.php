@@ -70,7 +70,7 @@ abstract class RESTful_Controller extends Controller {
         }
         elseif ( ! method_exists($this, 'action_' . $this->_action_map[$method]))
         {
-            throw RESTful_HTTP_Exception::factory(500, 'METHOD_MISCONFIGURED');
+            throw RESTful_HTTP_Exception::factory(500, 'METHOD_NOT_CONFIGURED');
         }
         else
         {

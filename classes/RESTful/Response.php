@@ -53,7 +53,7 @@ class RESTful_Response {
         $response_body = call_user_func(self::renderer($type), $data);
 
         if ($response_body === FALSE)
-            throw HTTP_Exception::factory(500, 'RESPONSE_RENDERER_ERROR');
+            throw RESTful_HTTP_Exception::factory(500, 'RESPONSE_RENDERER_ERROR');
 
         return $response_body;
     }

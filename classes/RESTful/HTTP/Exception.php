@@ -9,16 +9,6 @@
 abstract class RESTful_HTTP_Exception extends HTTP_Exception {
 
     /**
-     * Generate a Response for the current Exception
-     *
-     * @return Response
-     */
-    public function get_response()
-    {
-        return RESTful_HTTP_Exception::response($this);
-    }
-
-    /**
      * Get a Response object representing the exception
      *
      * @uses    Kohana_Exception::text

@@ -136,12 +136,13 @@ abstract class RESTful_Controller extends Controller {
     }
 
     /**
-     * Throws a RESTful_HTTP_Exception_405 as a response with a list of allowed actions.
+     * Throws a HTTP_Exception_405 as a response with a list of allowed actions.
      */
     public function action_invalid()
     {
         // Send the "Method Not Allowed" response
-        $this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
-        throw RESTful_HTTP_Exception::factory(405);
+        $e = new HTTP_Exception_405;
+        $e->headers('Allow', implode(', ', array_keys($this->_action_map)));
+        throw $e;
     }
 }

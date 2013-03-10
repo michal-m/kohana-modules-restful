@@ -37,12 +37,6 @@ abstract class RESTful_HTTP_Exception extends HTTP_Exception {
             $line    = $e->getLine();
             $trace   = $e->getTrace();
 
-            if ( ! headers_sent())
-            {
-                // Make sure the proper http header is sent
-                $http_header_status = ($e instanceof HTTP_Exception) ? $code : 500;
-            }
-
             /**
              * HTTP_Exceptions are constructed in the HTTP_Exception::factory()
              * method. We need to remove that entry from the trace and overwrite
@@ -52,7 +46,6 @@ abstract class RESTful_HTTP_Exception extends HTTP_Exception {
             {
                 extract(array_shift($trace));
             }
-
 
             if ($e instanceof ErrorException)
             {

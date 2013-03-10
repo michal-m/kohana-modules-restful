@@ -81,12 +81,13 @@ abstract class RESTful_Controller extends Controller {
         // shouldn't have any content.
         if (in_array($method, array(HTTP_Request::POST, HTTP_Request::PUT)))
         {
-            $request_content_type = $this->request->headers('Content-Type');
+            $type_found = preg_match('|^([^/]+/[^;$]+)(;\s*charset=(.*))?|', $this->request->headers('Content-Type'), $matches);
 
-            if (empty($request_content_type))
-            {
-                throw RESTful_HTTP_Exception::factory(400, 'NO_CONTENT_TYPE_PROVIDED');
-            }
+            if ( ! $type_found)
+                throw RESTful_HTTP_Exception(400, 'MALFORMED_REQUEST_CONTENT_TYPE');
+
+            $request_content_type = $matches[1];
+            //$request_content_charset = $matches[3];
 
             if (RESTful_Request::parser($request_content_type) === FALSE)
             {

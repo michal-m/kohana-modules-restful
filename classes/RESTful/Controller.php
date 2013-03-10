@@ -75,7 +75,7 @@ abstract class RESTful_Controller extends Controller {
         }
         elseif ( ! method_exists($this, 'action_' . $this->_action_map[$method]))
         {
-            throw HTTP_Exception::factory(500, 'METHOD_MISCONFIGURED');
+            throw RESTful_HTTP_Exception::factory(500, 'METHOD_MISCONFIGURED');
         }
         else
         {
@@ -90,12 +90,12 @@ abstract class RESTful_Controller extends Controller {
 
             if (empty($request_content_type))
             {
-                throw HTTP_Exception::factory(400, 'NO_CONTENT_TYPE_PROVIDED');
+                throw RESTful_HTTP_Exception::factory(400, 'NO_CONTENT_TYPE_PROVIDED');
             }
 
             if (RESTful_Request::parser($request_content_type) === FALSE)
             {
-                throw HTTP_Exception::factory(415);
+                throw RESTful_HTTP_Exception::factory(415);
             }
 
             $request_body = $this->request->body();
@@ -110,7 +110,7 @@ abstract class RESTful_Controller extends Controller {
 
         // Fail in no preferred response type could be determined.
         if ($preferred_response_content_type === FALSE)
-            throw HTTP_Exception::factory(
+            throw RESTful_HTTP_Exception::factory(
                 406,
                 'This service delivers following types: :types.',
                 array(':types' => implode(', ', array_keys($this->_response_types)))
@@ -140,12 +140,12 @@ abstract class RESTful_Controller extends Controller {
     }
 
     /**
-     * Throws a HTTP_Exception_405 as a response with a list of allowed actions.
+     * Throws a RESTful_HTTP_Exception_405 as a response with a list of allowed actions.
      */
     public function action_invalid()
     {
         // Send the "Method Not Allowed" response
         $this->response->headers('Allow', implode(', ', array_keys($this->_action_map)));
-        throw HTTP_Exception::factory(405);
+        throw RESTful_HTTP_Exception::factory(405);
     }
 }

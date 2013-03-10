@@ -1,22 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * Abstract Controller class for RESTful controller mapping. Supports GET, PUT,
- * POST, and DELETE. By default, these methods will be mapped to these actions:
- *
- * GET
- * :  Mapped to the "get" action, lists all objects
- *
- * POST
- * :  Mapped to the "create" action, creates a new object
- *
- * PUT
- * :  Mapped to the "update" action, update an existing object
- *
- * DELETE
- * :  Mapped to the "delete" action, delete an existing object
- *
- * Additional methods can be supported by adding the method and action to
- * the `$_action_map` property.
+ * Abstract Controller class for RESTful controller mapping.
  *
  * [!!] Using this class within a website is not recommended, due to most web
  * browsers only supporting the GET and POST methods. Generally, this class
@@ -32,7 +16,7 @@ abstract class RESTful_Controller extends Controller {
     /**
      * @var array Array of possible actions.
      */
-    protected $_action_map = array(
+    public static $action_map = array(
         HTTP_Request::GET    => 'get',
         HTTP_Request::PUT    => 'update',
         HTTP_Request::POST   => 'create',
@@ -46,45 +30,45 @@ abstract class RESTful_Controller extends Controller {
      */
     protected $_request_data;
 
-	/**
-	 * Executes the given action and calls the [Controller::before] and [Controller::after] methods.
-	 *
-	 * Can also be used to catch exceptions from actions in a single place.
-	 *
-	 * 1. Before the controller action is called, the [Controller::before] method
-	 * will be called.
-	 * 2. Next the controller action will be called.
-	 * 3. After the controller action is called, the [Controller::after] method
-	 * will be called.
-	 *
-	 * @throws  HTTP_Exception_405
-	 * @return  Response
-	 */
-	public function execute()
-	{
-		// Execute the "before action" method
-		$this->before();
+    /**
+     * Executes the given action and calls the [Controller::before] and [Controller::after] methods.
+     *
+     * Can also be used to catch exceptions from actions in a single place.
+     *
+     * 1. Before the controller action is called, the [Controller::before] method
+     * will be called.
+     * 2. Next the controller action will be called.
+     * 3. After the controller action is called, the [Controller::after] method
+     * will be called.
+     *
+     * @throws  HTTP_Exception_405
+     * @return  Response
+     */
+    public function execute()
+    {
+        // Execute the "before action" method
+        $this->before();
 
-		// Determine the action to use
-		$action = 'action_'.$this->request->action();
+        // Determine the action to use
+        $action = 'action_'.$this->request->action();
 
-		// If the action doesn't exist, it's a 405 Method Not Allowed
-		if ( ! method_exists($this, $action))
-		{
+        // If the action doesn't exist, it's a 405 Method Not Allowed
+        if ( ! method_exists($this, $action))
+        {
             throw HTTP_Exception::factory(405)
                 ->headers('Allow', implode(', ', array_keys($this->_action_map)))
                 ->request($this->request);
-		}
+        }
 
-		// Execute the action itself
-		$this->{$action}();
+        // Execute the action itself
+        $this->{$action}();
 
-		// Execute the "after action" method
-		$this->after();
+        // Execute the "after action" method
+        $this->after();
 
-		// Return the response
-		return $this->response;
-	}
+        // Return the response
+        return $this->response;
+    }
 
     /**
      * Preflight checks.
@@ -100,27 +84,7 @@ abstract class RESTful_Controller extends Controller {
         HTTP_Exception::$error_view = 'restful/error';
         HTTP_Exception::$error_view_content_type = 'text/plain';
 
-        // Override method if appropriate header given
-        if ($method_override = $this->request->headers('X-HTTP-Method-Override'))
-        {
-            $this->request->method($method_override);
-        }
-
         $method = strtoupper($this->request->method());
-
-        // Checking requested method
-        if ( ! isset($this->_action_map[$method]))
-        {
-            return $this->request->action('invalid');
-        }
-        elseif ( ! method_exists($this, 'action_' . $this->_action_map[$method]))
-        {
-            throw HTTP_Exception::factory(500, 'METHOD_NOT_CONFIGURED');
-        }
-        else
-        {
-            $this->request->action($this->_action_map[$method]);
-        }
 
         // Checking Content-Type. Considering only POST and PUT methods as other
         // shouldn't have any content.
@@ -184,16 +148,5 @@ abstract class RESTful_Controller extends Controller {
         }
 
         parent::after();
-    }
-
-    /**
-     * Throws a HTTP_Exception_405 as a response with a list of allowed actions.
-     */
-    public function action_invalid()
-    {
-        // Send the "Method Not Allowed" response
-        $e = new HTTP_Exception_405;
-        $e->headers('Allow', implode(', ', array_keys($this->_action_map)));
-        throw $e;
     }
 }

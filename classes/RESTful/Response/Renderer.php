@@ -79,7 +79,9 @@ class RESTful_Response_Renderer {
     {
         if (is_object($data) AND ! method_exists($data, '__toString'))
             return 'Object of ' . get_class($data) . ' class';
-        else
+        elseif (is_scalar($data))
             return (string) $data;
+        else
+            return gettype($data);
     }
 }

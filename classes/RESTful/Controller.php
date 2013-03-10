@@ -56,6 +56,10 @@ abstract class RESTful_Controller extends Controller {
         // Defaulting output content type to text/plain - will hopefully be overriden later
         $this->response->headers('Content-Type', 'text/plain');
 
+        // Override default error view and content type
+        HTTP_Exception::$error_view = 'restful/error';
+        HTTP_Exception::$error_view_content_type = 'text/plain';
+
         if ($method_override = $this->request->headers('X-HTTP-Method-Override'))
         {
             $this->request->method($method_override);
@@ -81,13 +85,18 @@ abstract class RESTful_Controller extends Controller {
         // shouldn't have any content.
         if (in_array($method, array(HTTP_Request::POST, HTTP_Request::PUT)))
         {
-            $type_found = preg_match('|^([^/]+/[^;$]+)(;\s*charset=(.*))?|', $this->request->headers('Content-Type'), $matches);
+            $request_content_type_full = $this->request->headers('Content-Type');
+
+            if ($request_content_type_full === NULL)
+                throw HTTP_Exception::factory(400, 'MISSING_REQUEST_CONTENT_TYPE');
+
+            $type_found = preg_match('|^([^/]+/[^;$]+)(;\s*charset=(.*))?|', $request_content_type_full, $matches);
 
             if ( ! $type_found)
                 throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_CONTENT_TYPE');
 
             $request_content_type = $matches[1];
-            //$request_content_charset = $matches[3];
+            // $request_content_charset = $matches[3];
 
             if (RESTful_Request::parser($request_content_type) === FALSE)
             {
@@ -113,6 +122,7 @@ abstract class RESTful_Controller extends Controller {
             );
 
         RESTful_Response::default_type($preferred_response_content_type);
+        HTTP_Exception::$error_view_content_type = $preferred_response_content_type;
     }
 
     /**

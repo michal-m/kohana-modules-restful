@@ -1,41 +1,31 @@
-# Kohana RESTful Module
+Kohana RESTful Module
+=====================
+
+introduction
+
+## Features
+
+
 ## Installation
 
-1. Copy and paste files and folders to MODPATH/restful
-2. Add this entry under `Kohana::modules` array in APPPATH/bootstrap.php : `'restful' => MODPATH.'restful', // RESTful interface`
-3. Create your a controller and extend `RESTful_Controller` (eg: `class Controller_YOURNAME extends RESTful_Controller`).
-4. Enjoy!
-
-## Usage
-
-Four methods are already defined in `MODPATH/restful/classes/restful/controller.php`
+1. Checkout/download files and folders to `MODPATH/restful`.
+2. Add this entry under `Kohana::modules` array in your `APPPATH/bootstrap.php`:
 
 ```php
-protected $_action_map = array(
-    HTTP_Request::GET    => 'get',
-    HTTP_Request::PUT    => 'update',
-    HTTP_Request::POST   => 'create',
-    HTTP_Request::DELETE => 'delete',
-);
+'restful'      => MODPATH.'restful',       // RESTful Module
 ```
 
-In your controller you have to define those actions:
 
-```php
-public function action_get()
-{
-    // some actions..
-}
-public function action_update()
-{
-    // some actions..
-}
-public function action_create()
-{
-    // some actions..
-}
-public function action_delete()
-{
-    // some actions..
-}
-```
+## Configuration
+
+This module requires no configuration.
+
+
+## Example Application
+
+
+## Notes
+
+
+## Acknowledgements
+

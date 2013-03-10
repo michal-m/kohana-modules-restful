@@ -18,19 +18,14 @@
  * Additional methods can be supported by adding the method and action to
  * the `$_action_map` property.
  *
- * [!!] Using this class within a website will require heavy modification,
- * due to most web browsers only supporting the GET and POST methods.
- * Generally, this class should only be used for web services and APIs.
+ * [!!] Using this class within a website is not recommended, due to most web
+ * browsers only supporting the GET and POST methods. Generally, this class
+ * should only be used for web services and APIs.
  *
  * @package     RESTful
  * @category    Controllers
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
- *
- * @todo        Caching responses
- * @todo        Authentication (Authorization: ... header)
- * @todo        Investigate HEAD/OPTIONS methods
- * @todo        Investigate error messages being displayed even when they shouldn't
  */
 abstract class RESTful_Controller extends Controller {
 
@@ -50,22 +45,6 @@ abstract class RESTful_Controller extends Controller {
      * @var mixed
      */
     protected $_request_data;
-
-    /**
-     * Controller Constructor
-     *
-     * @param   Request     $request
-     * @param   Response    $response
-     */
-    public function __construct(Request $request, Response $response)
-    {
-        // Enable RESTful internal error handling
-        set_exception_handler(array('RESTful_Exception', 'handler'));
-        // Enable Kohana error handling, converts all PHP errors to exceptions.
-        set_error_handler(array('RESTful', 'error_handler'));
-
-        parent::__construct($request, $response);
-    }
 
     /**
      * Preflight checks.

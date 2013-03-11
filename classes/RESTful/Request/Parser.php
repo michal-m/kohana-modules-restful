@@ -20,7 +20,7 @@ class RESTful_Request_Parser {
         $decoded = json_decode($request_body);
 
         if (json_last_error() !== JSON_ERROR_NONE)
-            throw RESTful_HTTP_Exception::factory(500, 'PARSE_ERROR_JSON_DECODE');
+            throw HTTP_Exception::factory(500, 'PARSE_ERROR_JSON_DECODE');
 
         return $decoded;
     }
@@ -39,7 +39,7 @@ class RESTful_Request_Parser {
         }
         catch (Exception $e)
         {
-            throw RESTful_HTTP_Exception::factory(500, 'PARSE_ERROR_UNSERIALIZE');
+            throw HTTP_Exception::factory(500, 'PARSE_ERROR_UNSERIALIZE');
         }
 
         return $data;

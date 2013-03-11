@@ -22,7 +22,7 @@ class RESTful_Response_Renderer {
         if (json_last_error() !== JSON_ERROR_NONE)
             throw HTTP_Exception::factory(500, 'RENDERER_ERROR_JSON_ENCODE');
 
-        return $json;
+        return (Kohana::$environment === Kohana::DEVELOPMENT) ? Helper_JSON::format($json) : $json;
     }
 
     /**

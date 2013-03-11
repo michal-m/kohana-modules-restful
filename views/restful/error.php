@@ -3,6 +3,9 @@
  * Sorry about the logic within this template but I couldn't figure out how to
  * handle it any other way.
  */
+if (empty($message))
+    return;
+
 if (HTTP_Exception::$error_view_content_type === 'text/plain')
 {
     echo $message;

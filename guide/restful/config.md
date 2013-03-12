@@ -5,7 +5,7 @@ handle various request methods (GET/POST/PUT/DELETE) your are required to
 translate them into controller action names.
 
 
-## Request Routing
+## Request routing
 
 This module comes with a predefined [RESTful::route_filter] method that you can
 use as your route filter:

@@ -119,7 +119,7 @@ ignored, i.e. `application/json` and `application/json; charset=utf-8` are
 treated as the same.
 
 
-#### Creating your own
+#### Creating your own parser
 
 If you want to create your own request parser it has to accept one parameter
 which will contain the request body to be parsed. Example function:
@@ -133,8 +133,8 @@ Now all you need to do is register it with the [RESTful_Request::parser]:
 
     RESTful_Request::parser('application/json', 'my_json_parser');
 
-[!!] Note that this any request parsers have to be set before
-[RESTful_Controller::before] is executed.
+[!!] Note that any request parsers have to be set before [RESTful_Controller::before]
+is executed.
 
 Because Request Parsers are ignoring the charset definition in the
 `Content-Type` header there is no need to define parsers depending on
@@ -148,8 +148,56 @@ Content-Type charsets.
 
 ### Response Body Renderer
 
+APIs of course are all about retreiving the data and to do so the API needs to
+know what format the client expects the data in and therefore the `Accept`
+header has to be provided in the request header. If present the controller will
+automatically determine the most suitable from all available ones (default ones
+listed below) using Kohana's [HTTP_Header::preferred_accept] function (non explicit).
 
-#### Creating your own
+Controller will not render the response body automatically, you have to do it
+using [RESTful_Response::render]:
+
+    $my_response_data = array('foo', 'bar', 'baz');
+    $this->response->body(RESTful_Response::render($my_response_data));
+
+The RESTful_Response will know what was client's preferred response content type
+and will use appropriate renderer to generate it accordingly.
+
+If, for some reason, you will want to override the response content type you can
+pass it as the second parameter, e.g.:
+
+    $this->response->body(RESTful_Response::render($my_response_data), 'text/plain');
+
+The module contains following predefined renderers:
+
+Mime Type                         | Handled by
+----------------------------------|------------------------------------------------------------
+application/json                  | [RESTful_Response_Renderer::application_json]
+application/php-serialized        | [RESTful_Response_Renderer::application_php_serialized]
+application/php-serialized-array  | [RESTful_Response_Renderer::application_php_serialized_array]
+application/php-serialized-object | [RESTful_Response_Renderer::application_php_serialized_object]
+text/php-printr                   | [RESTful_Response_Renderer::text_php_printr]
+text/plain                        | [RESTful_Response_Renderer::text_plain]
+
+[!!] When rendering `application/json` returns *pretty print* version of the
+JSON data when in DEVELOPMENT environment and standard otherwise.
+
+
+#### Creating your own renderer
+
+If you want to create your own response renderer you have to follow the same
+steps as if with [own request parser](#creating-your-own-parser).
+
+Example function:
+
+    function my_json_renderer($data)
+    {
+        return json_encode($data, TRUE, 512, JSON_BIGINT_AS_STRING);
+    }
+
+And register it:
+
+    RESTful_Response::renderer('application/json', 'my_json_renderer');
 
 
 ### Overriding existing
@@ -158,3 +206,6 @@ You are able to override existing parsers/renderers. To do it, you simply
 register it with the same mime type and the previous one will be returned, e.g.
 
     $previous_parser = RESTful_Request::parser('application/json', 'my_json_parser');
+
+[!!] Note that, similarly to Request Parsers, any response renderers have to be
+registered before [RESTful_Controller::before] is executed.

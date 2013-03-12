@@ -128,7 +128,7 @@ abstract class RESTful_Controller extends Controller {
 
         $this->response->headers('Content-Type', $preferred_response_content_type);
         RESTful_Response::default_type($preferred_response_content_type);
-        HTTP_Exception::$error_view_content_type = $preferred_response_content_type;
+        Kohana_Exception::$error_view_content_type = $preferred_response_content_type;
     }
 
     /**
@@ -149,5 +149,31 @@ abstract class RESTful_Controller extends Controller {
         }
 
         parent::after();
+    }
+
+    /**
+     * Allows to retreive parts of request data if it's an array or an object.
+     *
+     *     $this->request_data('price');
+     *
+     * @param   string  $name
+     * @return  mixed
+     */
+    public function request_data($name = NULL)
+    {
+        $data = $this->_request_data;
+
+        if ($name !== NULL)
+        {
+
+            if (is_array($data))
+                return (array_key_exists($name, $data)) ? $data[$name] : NULL;
+            elseif (is_object($data))
+                return (property_exists($data, $name)) ? $data->$name : NULL;
+            else
+                return NULL;
+        }
+
+        return $data;
     }
 }

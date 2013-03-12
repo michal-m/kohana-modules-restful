@@ -12,7 +12,7 @@ introduction
 2. Add this entry under `Kohana::modules` array in your `APPPATH/bootstrap.php`:
 
 ```php
-'restful'      => MODPATH.'restful',       // RESTful Module
+'restful'    => MODPATH.'restful',    // RESTful
 ```
 
 

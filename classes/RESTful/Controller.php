@@ -126,6 +126,7 @@ abstract class RESTful_Controller extends Controller {
                 array(':types' => implode(', ', array_keys($this->_response_types)))
             );
 
+        $this->response->headers('Content-Type', $preferred_response_content_type);
         RESTful_Response::default_type($preferred_response_content_type);
         HTTP_Exception::$error_view_content_type = $preferred_response_content_type;
     }

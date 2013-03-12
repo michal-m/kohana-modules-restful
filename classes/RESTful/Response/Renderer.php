@@ -17,12 +17,21 @@ class RESTful_Response_Renderer {
      */
     static public function application_json($data)
     {
-        $json = json_encode($data);
+        if (Kohana::$environment === Kohana::DEVELOPMENT)
+        {
+            $json = (version_compare(PHP_VERSION, '5.4.0', '>='))
+                ? json_encode($data, JSON_PRETTY_PRINT)
+                : Helper_JSON::format(json_encode($data));
+        }
+        else
+        {
+            $json = json_encode($data);
+        }
 
         if (json_last_error() !== JSON_ERROR_NONE)
             throw HTTP_Exception::factory(500, 'RENDERER_ERROR_JSON_ENCODE');
 
-        return (Kohana::$environment === Kohana::DEVELOPMENT) ? Helper_JSON::format($json) : $json;
+        return $json;
     }
 
     /**

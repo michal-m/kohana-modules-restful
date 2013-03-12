@@ -12,8 +12,8 @@ your it calls `parent::before()`.
 ## Request method override
 
 If you want to allow API clients to override HTTP method you can implement it in
-a couple of ways. I would recommend this is done inside a Route Filter, but it
-should work just as well inside [`before()`](#controllerbefore) method.
+a couple of ways. I would recommend this is done inside a [Route Filter](config#route-filter),
+but it should work just as well inside [`before()`](#controllerbefore) method.
 
 ### X-HTTP-Method-Override header
 
@@ -23,8 +23,8 @@ The way it works is your client supplies additional header called
 
     X-HTTP-Method-Override: PUT
 
-For your Controller to understand this your API Route Filter should look like
-this:
+For your Controller to understand this your API [Route Filter](config#route-filter)
+should look like this:
 
     ->filter(function ($route, $params, $request){
         // Override method if appropriate header provided
@@ -44,7 +44,7 @@ this:
 Another way to override the Request method is to do it via request parameter.
 What you basically do is supply additional request variable that contains the
 method, e.g. your client calls `http://api.example.com/resource/113?method=DELETE`.
-Then, your Route Filter might look like this:
+Then, your [Route Filter](config#route-filter) might look like this:
 
     ->filter(function ($route, $params, $request){
         // Override method if appropriate header provided
@@ -65,10 +65,10 @@ by default send `GET` method.
 
 ### Controller::before()
 
-Instead of using a route filter you can always override the request method
-inside your controller's `before()` method. This might be useful if you want to
-have the control over it in one particular controller rather than all of them.
-Your example `before()` method might look like this:
+Instead of using a [Route Filter](config#route-filter) you can always override
+the request method inside your controller's `before()` method. This might be
+useful if you want to have the control over it in one particular controller
+rather than all of them. Your example `before()` method might look like this:
 
     public function before()
     {

@@ -103,7 +103,7 @@ We'll be accepting following URLs:
              * Request contained a property name in the URL so we're going to update
              * just the one.
              */
-            if ($property = $this->request->param($property))
+            if ($property = $this->request->param('property'))
             {
                 try
                 {
@@ -132,7 +132,7 @@ We'll be accepting following URLs:
             else
                 throw HTTP_Exception::factory(400, 'Invalid content type, expected array.');
 
-            if ( ! $book->update()->saved())
+            if ($book->changed() AND ! $book->update()->saved())
                 throw HTTP_Exception::factory(500);
 
             $this->response->status(204);
@@ -171,8 +171,34 @@ We'll try to retreive a list of books.
 
 #### Request
 
+    GET /books HTTP/1.1
+    Host: api.example.com
+    Accept: application/json
 
 #### Response
+
+    HTTP/1.1 200 OK
+    Server: Apache
+    Content-Length: 472
+    Content-Type: application/json
+
+    [ {
+      "id" : "1",
+      "title" : "A Study in Scarlet",
+      "author" : "Sir Arthur Conan Doyle",
+      "isbn" : "978-1840224115",
+      "date_added" : "2001-12-01",
+      "price" : "1.99",
+      "in_stock" : "1"
+    }, {
+      "id" : "2",
+      "title" : "The Sign of the Four",
+      "author" : "Sir Arthur Conan Doyle",
+      "isbn" : "978-1475173475",
+      "date_added" : "2012-04-10",
+      "price" : "7.20",
+      "in_stock" : "0"
+    } ]
 
 
 ### GET - Get book's property
@@ -181,8 +207,18 @@ Now let's try and get a book's property to see if it is currently in stock.
 
 #### Request
 
+    GET /books/1/in_stock HTTP/1.1
+    Host: api.example.com
+    Accept: application/json
 
 #### Response
+
+    HTTP/1.1 200 OK
+    Server: Apache
+    Content-Length: 3
+    Content-Type: application/json
+
+    "1"
 
 
 ### PUT - Update a book
@@ -191,6 +227,18 @@ We're gonna update the `in_stock` property.
 
 #### Request
 
+    PUT /books/1/in_stock HTTP/1.1
+    Host: api.example.com
+    Accept: application/json
+
+    "0"
 
 #### Response
 
+    HTTP/1.1 204 No Content
+    Server: Apache
+    Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+    Expires: -1
+    Pragma: no-cache
+    Content-Length: 0
+    Content-Type: application/json

@@ -15,6 +15,22 @@ your applications.
 
 ### bootstrap.php
 
+    // Default API Route
+    Route::set('default', '(<resource>(/<id>(/<property>)))')
+        ->filter('RESTful::route_filter')
+        ->defaults(array(
+            'resource'   => 'welcome',
+            'action'     => 'get',
+        ));
+
+We'll be accepting following URLs:
+
+- To get a list of all books:  
+    `http://api.example.com/books/`
+- To get details of a single book:  
+    `http://api.example.com/books/1`
+- To get a property of a single book:  
+    `http://api.example.com/books/1/title`
 
 ### classes/Controller/API/Books.php
 

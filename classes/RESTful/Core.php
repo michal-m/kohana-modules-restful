@@ -6,6 +6,8 @@
  */
 class RESTful_Core {
 
+    const VERSION = '2.0.0-beta2';
+
     /**
      * Filters RESTful Route. Sets <resource> as controller name and maps
      * Request method with appropriate action name.

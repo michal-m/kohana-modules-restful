@@ -13,7 +13,6 @@ class RESTful_Response {
      */
     protected static $_default_type;
 
-
      /**
      * @var array
      */

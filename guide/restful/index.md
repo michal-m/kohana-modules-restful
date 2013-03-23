@@ -1,6 +1,10 @@
 # About RESTful module
 
-@TODO Introduction
+RESTful module provides a controller abstraction layer which allows creating
+simple, yet powerful [RESTful Web Services](http://en.wikipedia.org/wiki/Representational_state_transfer#RESTful_web_services)
+using Kohana framework. It attempts to follow the [HTTP 1.1 spec](http://www.w3.org/Protocols/rfc2616/rfc2616.html)
+when it gets to handling [request methods](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)
+and returning appropriate [response status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10).
 
 
 ## What the RESTful module does (and does not do)
@@ -20,7 +24,11 @@ handle the following mime types:
 
 All of the above are defined in [RESTful_Request_Parser].
 
-@TODO link to "how to access parsed request data"
+Read more:
+
+ * How to access the request data? @TODO link
+ * How to create own request parsers? @TODO link
+ * How to add new request data parsers? @TODO link
 
 
 ## Predefined Response Renderes
@@ -39,4 +47,5 @@ There are also additional, "helper", renderers:
 
 All the predefined response renderers are located in [RESTful_Response_Renderer].
 
-@TODO link to "how to render data for output"
+ * How to create own response renderers? @TODO link
+ * How to add new response renderers? @TODO link

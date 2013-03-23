@@ -13,7 +13,6 @@ class RESTful_Response {
      */
     protected static $_default_type;
 
-
      /**
      * @var array
      */
@@ -28,9 +27,7 @@ class RESTful_Response {
     public static function default_type($type = NULL)
     {
         if ($type === NULL)
-        {
             return self::$_default_type;
-        }
 
         self::$_default_type = $type;
     }
@@ -68,9 +65,7 @@ class RESTful_Response {
     public static function renderer($type = NULL, $callback = NULL)
     {
         if ($callback === NULL)
-        {
             return ($type === NULL) ? self::$_renderers : Arr::get(self::$_renderers, $type, FALSE);
-        }
 
         $return = (array_key_exists($type, self::$_renderers)) ? self::$_renderers[$type] : TRUE;
         self::$_renderers[$type] = $callback;

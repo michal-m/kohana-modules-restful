@@ -7,7 +7,6 @@
  * should only be used for web services and APIs.
  *
  * @package     RESTful
- * @category    Controllers
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
  */
@@ -104,9 +103,7 @@ abstract class RESTful_Controller extends Controller {
             // $request_content_charset = $matches[3];
 
             if (RESTful_Request::parser($request_content_type) === FALSE)
-            {
                 throw HTTP_Exception::factory(415);
-            }
 
             $request_body = $this->request->body();
             $this->_request_data = (strlen($request_body) > 0) ? RESTful_Request::parse($request_body, $request_content_type): NULL;

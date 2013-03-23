@@ -32,9 +32,7 @@ abstract class RESTful_HTTP_Exception extends HTTP_Exception {
              * yet determined.
              */
             if ( ! RESTful_Response::default_type())
-            {
                 throw HTTP_Exception::factory(500, $message);
-            }
 
             /**
              * HTTP_Exceptions are constructed in the HTTP_Exception::factory()

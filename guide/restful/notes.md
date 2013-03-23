@@ -6,8 +6,8 @@ API.
 
 ## Use of `before()`
 
-[!!] If your controller has its own `before()` method defined, always make sure
-your it calls `parent::before()`.
+[!!] If your controller has its own `before()` method defined, always **make
+sure it calls `parent::before()`**.
 
 ## Request method override
 

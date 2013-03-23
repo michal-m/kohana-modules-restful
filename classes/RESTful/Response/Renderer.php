@@ -3,7 +3,6 @@
  * JSON Data Response Renderer class.
  *
  * @package     RESTful
- * @category    Renderers
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
  */

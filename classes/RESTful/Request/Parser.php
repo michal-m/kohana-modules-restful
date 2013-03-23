@@ -3,7 +3,6 @@
  * Request Data Parser class.
  *
  * @package     RESTful
- * @category    Parsers
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
  */

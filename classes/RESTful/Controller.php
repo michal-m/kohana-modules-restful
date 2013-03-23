@@ -7,7 +7,6 @@
  * should only be used for web services and APIs.
  *
  * @package     RESTful
- * @category    Controllers
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
  */

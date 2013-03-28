@@ -1,5 +1,4 @@
 ## [RESTful]()
-- [Configuration](config)
 - [Usage](usage)
 - [Real World Example](example)
 - [Important Notes](notes)

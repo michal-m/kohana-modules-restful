@@ -9,6 +9,8 @@ API.
 [!!] If your controller has its own `before()` method defined, always **make
 sure it calls `parent::before()`**.
 
+* * * * *
+
 ## Overriding request method
 
 If you want to allow API clients to override HTTP method you can implement it in
@@ -84,6 +86,7 @@ rather than all of them. Your example `before()` method might look like this:
 [!!] If you choose this way to override the request method make sure you do it
 before calling `parent::before()`.
 
+* * * * *
 
 ## Default response renderer
 

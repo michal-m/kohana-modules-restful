@@ -9,7 +9,7 @@ API.
 [!!] If your controller has its own `before()` method defined, always **make
 sure it calls `parent::before()`**.
 
-## Request method override
+## Overriding request method
 
 If you want to allow API clients to override HTTP method you can implement it in
 a couple of ways. I would recommend this is done inside a [Route Filter](config#route-filter),

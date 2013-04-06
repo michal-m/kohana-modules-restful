@@ -41,9 +41,7 @@ class RESTful_Request {
     public static function parser($type = NULL, $callback = NULL)
     {
         if ($callback === NULL)
-        {
             return ($type === NULL) ? self::$_parsers : Arr::get(self::$_parsers, $type, FALSE);
-        }
 
         $return = (array_key_exists($type, self::$_parsers)) ? self::$_parsers[$type] : TRUE;
         self::$_parsers[$type] = $callback;

@@ -7,7 +7,6 @@
  * should only be used for web services and APIs.
  *
  * @package     RESTful
- * @category    Controllers
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
  */
@@ -104,9 +103,7 @@ abstract class RESTful_Controller extends Controller {
             // $request_content_charset = $matches[3];
 
             if (RESTful_Request::parser($request_content_type) === FALSE)
-            {
                 throw HTTP_Exception::factory(415);
-            }
 
             $request_body = $this->request->body();
             $this->_request_data = (strlen($request_body) > 0) ? RESTful_Request::parse($request_body, $request_content_type): NULL;
@@ -126,8 +123,9 @@ abstract class RESTful_Controller extends Controller {
                 array(':types' => implode(', ', array_keys($this->_response_types)))
             );
 
+        $this->response->headers('Content-Type', $preferred_response_content_type);
         RESTful_Response::default_type($preferred_response_content_type);
-        HTTP_Exception::$error_view_content_type = $preferred_response_content_type;
+        Kohana_Exception::$error_view_content_type = $preferred_response_content_type;
     }
 
     /**
@@ -148,5 +146,31 @@ abstract class RESTful_Controller extends Controller {
         }
 
         parent::after();
+    }
+
+    /**
+     * Allows to retreive parts of request data if it's an array or an object.
+     *
+     *     $this->request_data('price');
+     *
+     * @param   string  $name
+     * @return  mixed
+     */
+    public function request_data($name = NULL)
+    {
+        $data = $this->_request_data;
+
+        if ($name !== NULL)
+        {
+
+            if (is_array($data))
+                return (array_key_exists($name, $data)) ? $data[$name] : NULL;
+            elseif (is_object($data))
+                return (property_exists($data, $name)) ? $data->$name : NULL;
+            else
+                return NULL;
+        }
+
+        return $data;
     }
 }

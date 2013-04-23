@@ -98,12 +98,8 @@ abstract class RESTful_Controller extends Controller {
             if (RESTful_Request::parser($request_content_type) === FALSE)
                 throw HTTP_Exception::factory(415);
 
-            $request_body = $this->request->body();
-
-            if (strlen($request_body) > 0)
-            {
-                $this->request->data(RESTful_Request::parse($request_body, $request_content_type));
-            }
+            $this->request->body_content_type($request_content_type);
+            $this->request->parse_body();
         }
 
         // Determining response content type

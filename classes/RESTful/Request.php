@@ -14,24 +14,6 @@ class RESTful_Request extends Kohana_Request {
     protected static $_parsers = array();
 
     /**
-     * Parses Request body
-     *
-     * @param   string  $request_body
-     * @param   string  $type
-     * @return  mixed   Returns decoded request body
-     * @throws  HTTP_Exception_500
-     */
-    public static function parse($request_body, $type)
-    {
-        $request_params = call_user_func(self::parser($type), $request_body);
-
-        if ($request_params === FALSE AND ! empty($request_body))
-            throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
-
-        return $request_params;
-    }
-
-    /**
      * Getter/setter for Request parsers.
      *
      * @param   string      $type       Content MIME type
@@ -49,9 +31,34 @@ class RESTful_Request extends Kohana_Request {
     }
 
     /**
+     * @var string
+     */
+    protected $_body_content_type;
+
+    /**
      * @var mixed
      */
     protected $_data;
+
+    /**
+     * Sets and gets the request body type.
+     *
+     * @param   string  $content_type
+     * @return  mixed
+     */
+    public function body_content_type($content_type = NULL)
+    {
+        if ($content_type === NULL)
+        {
+            // Act as getter
+            return $this->_request_content_type;
+        }
+
+        // Act as setter
+        $this->_request_content_type = $content_type;
+
+        return $this;
+    }
 
     /**
      * Sets and gets the data from the request.
@@ -71,5 +78,24 @@ class RESTful_Request extends Kohana_Request {
         $this->_data = $data;
 
         return $this;
+    }
+
+    /**
+     * Parses Request body
+     *
+     * @return  mixed   Returns decoded request body
+     * @throws  HTTP_Exception_500
+     */
+    public function parse_body()
+    {
+        if (strlen($this->_body) > 0)
+        {
+            $request_data = call_user_func(self::parser($this->_body_content_type), $this->_body);
+
+            if ($request_data === FALSE)
+                throw HTTP_Exception::factory(400, 'MALFORMED_REQUEST_BODY');
+
+            $this->_data = $request_data;
+        }
     }
 }

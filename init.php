@@ -3,6 +3,7 @@
 RESTful_Request::parser('application/json',                     'RESTful_Request_Parser::application_json');
 RESTful_Request::parser('application/php-serialized',           'RESTful_Request_Parser::application_php_serialized');
 RESTful_Request::parser('application/x-www-form-urlencoded',    'RESTful_Request_Parser::application_x_www_form_urlencoded');
+RESTful_Request::parser('multipart/form-data',                  'RESTful_Request_Parser::text_plain');  // We're not supporting this right now
 RESTful_Request::parser('text/plain',                           'RESTful_Request_Parser::text_plain');
 
 RESTful_Response::renderer('application/json',                  'RESTful_Response_Renderer::application_json');

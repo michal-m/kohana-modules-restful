@@ -6,7 +6,7 @@
  * @author      Michał Musiał
  * @copyright   (c) 2013 Michał Musiał
  */
-class RESTful_Request {
+class RESTful_Request extends Kohana_Request {
 
     /**
      * @var array

@@ -61,23 +61,25 @@ class RESTful_Request extends Kohana_Request {
     }
 
     /**
-     * Sets and gets the data from the request.
+     * Gets the request data or its parts if it's an array or an object.
      *
-     * @param   mixed   $data
+     * @param   string  $name
      * @return  mixed
      */
-    public function data($data = NULL)
+    public function data($name = NULL)
     {
-        if ($data === NULL)
+        if ($name !== NULL)
         {
-            // Act as getter
-            return $this->_data;
+
+            if (is_array($this->_data))
+                return (array_key_exists($name, $this->_data)) ? $this->_data[$name] : NULL;
+            elseif (is_object($this->_data))
+                return (property_exists($this->_data, $name)) ? $this->_data->$name : NULL;
+            else
+                return NULL;
         }
 
-        // Act as setter
-        $this->_data = $data;
-
-        return $this;
+        return $this->_data;
     }
 
     /**

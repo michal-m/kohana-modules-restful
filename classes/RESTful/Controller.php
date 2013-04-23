@@ -23,13 +23,6 @@ abstract class RESTful_Controller extends Controller {
     );
 
     /**
-     * Contains parsed request data.
-     *
-     * @var mixed
-     */
-    protected $_request_data;
-
-    /**
      * Executes the given action and calls the [Controller::before] and [Controller::after] methods.
      *
      * Can also be used to catch exceptions from actions in a single place.
@@ -106,7 +99,11 @@ abstract class RESTful_Controller extends Controller {
                 throw HTTP_Exception::factory(415);
 
             $request_body = $this->request->body();
-            $this->_request_data = (strlen($request_body) > 0) ? RESTful_Request::parse($request_body, $request_content_type): NULL;
+
+            if (strlen($request_body) > 0)
+            {
+                $this->request->data(RESTful_Request::parse($request_body, $request_content_type));
+            }
         }
 
         // Determining response content type

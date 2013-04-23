@@ -47,19 +47,4 @@ class RESTful_Request {
         self::$_parsers[$type] = $callback;
         return $return;
     }
-
-    /**
-     * Registers new Request parser.
-     *
-     * [!!] Deprecated in favor of using [RESTful_Request::parser].
-     *
-     * @deprecated since version 3.3.0
-     * @param   string      $type       Content MIME type
-     * @param   callback    $callback
-     * @return  mixed       Returns previous parser if one existed or TRUE otherwise
-     */
-    public static function register_parser($type, $callback)
-    {
-        return self::parser($type, $callback);
-    }
 }

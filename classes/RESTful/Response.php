@@ -71,19 +71,4 @@ class RESTful_Response {
         self::$_renderers[$type] = $callback;
         return $return;
     }
-
-    /**
-     * Registers new Response renderers.
-     *
-     * [!!] Deprecated in favor of using [RESTful_Response::renderer].
-     *
-     * @deprecated since version 3.3.0
-     * @param   string      $type       Content MIME type
-     * @param   callback    $callback
-     * @return  mixed       Returns previous renderer if one existed or TRUE otherwise
-     */
-    public static function register_renderer($type, $callback)
-    {
-        return self::renderer($type, $callback);
-    }
 }

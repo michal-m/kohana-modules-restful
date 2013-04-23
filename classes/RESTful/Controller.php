@@ -38,6 +38,9 @@ abstract class RESTful_Controller extends Controller {
      */
     public function execute()
     {
+        // Initiate REST
+        $this->_restful_init();
+
         // Execute the "before action" method
         $this->before();
 
@@ -65,10 +68,8 @@ abstract class RESTful_Controller extends Controller {
     /**
      * Preflight checks.
      */
-    public function before()
+    protected function _restful_init()
     {
-        parent::before();
-
         // Defaulting output content type to text/plain - will hopefully be overriden later
         $this->response->headers('Content-Type', 'text/plain');
 

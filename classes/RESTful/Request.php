@@ -47,4 +47,29 @@ class RESTful_Request extends Kohana_Request {
         self::$_parsers[$type] = $callback;
         return $return;
     }
+
+    /**
+     * @var mixed
+     */
+    protected $_data;
+
+    /**
+     * Sets and gets the data from the request.
+     *
+     * @param   mixed   $data
+     * @return  mixed
+     */
+    public function data($data = NULL)
+    {
+        if ($data === NULL)
+        {
+            // Act as getter
+            return $this->_data;
+        }
+
+        // Act as setter
+        $this->_data = $data;
+
+        return $this;
+    }
 }

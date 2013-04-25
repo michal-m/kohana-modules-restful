@@ -10,7 +10,7 @@ class RESTful_Core {
     const VERSION = '2.0.0-beta3';
 
     /**
-     * Filters RESTful Route. Sets <resource> as controller name and maps
+     * Filters RESTful Route. Sets <controller> as a <resource> name and maps
      * Request method with appropriate action name.
      *
      * @param   Route   $route
@@ -26,7 +26,7 @@ class RESTful_Core {
             $request->method($method_override);
         }
 
-        $params['controller'] = $params['resource'];
+        $params['resource'] = $params['controller'];
         $params['action'] = RESTful_Controller::$action_map[strtoupper($request->method())];
 
         return $params;

@@ -7,7 +7,7 @@
 class RESTful_Core {
 
     // Release version
-    const VERSION = '2.0.0-beta2';
+    const VERSION = '2.0.0-beta3';
 
     /**
      * Filters RESTful Route. Sets <resource> as controller name and maps

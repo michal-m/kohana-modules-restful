@@ -120,7 +120,7 @@ abstract class RESTful_Controller extends Controller {
             throw HTTP_Exception::factory(
                 406,
                 'This service delivers following types: :types.',
-                array(':types' => implode(', ', array_keys($this->_response_types)))
+                array(':types' => implode(', ', array_keys(RESTful_Response::renderer())))
             );
 
         $this->response->headers('Content-Type', $preferred_response_content_type);

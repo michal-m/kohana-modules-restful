@@ -13,7 +13,7 @@ if (HTTP_Exception::$error_view_content_type === 'text/plain')
 }
 
 $error_data = array(
-    'code'      => ($e instanceof HTTP_Exception) ? $e->getCode() : 500,
+    'code'      => (isset($e) AND $e instanceof HTTP_Exception) ? $e->getCode() : 500,
     'message'   => $message,
 );
 

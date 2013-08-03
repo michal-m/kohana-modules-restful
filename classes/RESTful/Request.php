@@ -19,7 +19,11 @@ class RESTful_Request
      */
     public static function get_parser($type = NULL)
     {
-        return ($type === NULL) ? self::$_parsers : Arr::get(self::$_parsers, $type, FALSE);
+        if($type == NULL) {
+            return self::$_parsers;
+        } else {
+            return Arr::get(self::$_parsers, preg_replace("/^([^;]+)(.*)/", "$1", $type), FALSE);
+        }
     }
 
     /**
